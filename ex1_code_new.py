@@ -60,7 +60,7 @@ def initialization(n, pedestrian_number,obstacle_number) :
     
 #%% ################## DETERMINATION OF VALID NEIGHBOORS CELLS ##################################
     
-def neighboors_computation(loc, grid_size) :
+def neighboors_computation(loc, grid_size, env) :
     """ Compute the index of neighbooring cases of a pedestrian given the location of the 
     pedestrian and the grid size 
     loc = index of the pedestrian location"""
@@ -78,26 +78,60 @@ def neighboors_computation(loc, grid_size) :
                  [loc[0],loc[1]+1],
                  [loc[0], loc[1]]]
             
+    ####### CORNER CONSIDERTION : ######################
+#If one direct adjacent cell is an obstacle, then the corners directkly adjaent are not neighboors
     
-    ################## ELEMINATION OF THE NON-EXISTING NEIGHBOORING CASES ####
-    if loc[0] >= grid_size-1 or loc[1] >= grid_size-1 or loc[0] == 0 or loc[1] == 0:
+    possible = [0 for j in range(9)]
     
-        #down and right boundaries
-        l = 0
-        while l < len(neighboors) :
-            if neighboors[l][0] >= grid_size or neighboors[l][1] >= grid_size : 
-                del neighboors[l]
-                l -= 1
-            l += 1
-
-        #up and left boundaries
-        l = 0
-        while l <len(neighboors) :
-            if neighboors[l][0] < 0 or neighboors[l][1] < 0 : 
-                del neighboors[l]
-                l -= 1
-            l += 1
+    if loc[1] < grid_size-1:
+        neigh = neighboors[7]
+        if env[neigh[0], neigh[1]] == 2:
+            possible[2] = 1
+            possible[5] = 1
+            possible[7] = 1
+    else:
+        possible[2] = 1
+        possible[5] = 1
+        possible[7] = 1
             
+    if loc[0] < grid_size-1:
+        neigh = neighboors[4]
+        if env[neigh[0], neigh[1]] == 2:
+            possible[4] = 1
+            possible[5] = 1
+            possible[3] = 1
+    else:
+        possible[3] = 1
+        possible[4] = 1
+        possible[5] = 1
+            
+    if loc[0] > 0:
+        neigh = neighboors[1]
+        if env[neigh[0], neigh[1]] == 2:
+            possible[0] = 1
+            possible[1] = 1
+            possible[2] = 1
+    else:
+        possible[2] = 1
+        possible[1] = 1
+        possible[0] = 1
+            
+    if loc[1] > 0:
+        neigh = neighboors[6]
+        if env[neigh[0], neigh[1]] == 2:
+            possible[6] = 1
+            possible[0] = 1
+            possible[3] = 1
+    else:
+        possible[6] = 1
+        possible[0] = 1
+        possible[3] = 1
+            
+    count = 0
+    for i in range(9):
+        if possible[i] == 1:
+            del neighboors[i-count]
+            count += 1
     
     return neighboors
 
@@ -116,7 +150,7 @@ def distance_matrix(env, grid_size, target):
         # Until every empty cell from which the target is reachable has a distance to the target
         
         for loc in at_dist:
-            neighboors = neighboors_computation(loc, grid_size)
+            neighboors = neighboors_computation(loc, grid_size, env)
             for neigh in neighboors:
                 if env[neigh[0],neigh[1]] != 2 and dist[neigh[0],neigh[1]] == -1:
                     dist[neigh[0],neigh[1]] = count
@@ -144,7 +178,7 @@ def one_step(env, pedestrian_number, X, distance_matrix, grid_size) :
 
     for ped in range(pedestrian_number):
         loc = X[ped] #pedestrian location
-        neighboors = neighboors_computation(loc, grid_size)
+        neighboors = neighboors_computation(loc, grid_size, env)
         possible_moves = []
         for neigh in neighboors:
             if [neigh[0], neigh[1]] in X:
@@ -152,10 +186,6 @@ def one_step(env, pedestrian_number, X, distance_matrix, grid_size) :
             else:
                 possible_moves.append(distance_matrix[neigh[0], neigh[1]])
         possible_moves[-1] = distance_matrix[neigh[0], neigh[1]]
-
-
-
-        print('\n\n', neighboors, '\n', possible_moves, '\n')
         best_move = len(possible_moves)-1
         for neigh in range(len(possible_moves)):
             print(neigh, possible_moves[neigh])
