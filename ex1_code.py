@@ -19,6 +19,10 @@ import tkinter as tk
 #env represent a matrix with fix objects (target and X)
 #X is a list of the coordinates of the pedestrians during the simulation
 
+#We store the speed of the pedestrians in the list "speed", and create a waiting
+#list for them in the list "waiting_list" which stores the time of the last 
+#move of each pedestrian. 
+
 
 def initialization(n, pedestrian_number,obstacle_number) : 
     
@@ -49,6 +53,17 @@ def initialization(n, pedestrian_number,obstacle_number) :
         
       #pedestrian place :
     X =  [[] for i in range(pedestrian_number)] 
+    
+    #speed : here the pedestrians have all the same speed of 1case/s
+    speed = [1 for i in range(pedestrian_number)] #cannot be > 1case/s
+    waiting_list = [0 for i in range(pedestrian_number)] #howlong the pedestrian are in this position
+    time = 0 #initialisation, time set to zero
+    
+    
+    
+    
+    
+    
     for i in range(pedestrian_number) : 
         h,v  = np.random.randint(grid_size), np.random.randint(grid_size)
         while env[h][v] > 0 : #don't put 2 ped. in the same place, don't put them in the target
@@ -57,7 +72,7 @@ def initialization(n, pedestrian_number,obstacle_number) :
         
         
     
-    return(grid_size, env, X,target)
+    return(grid_size, env, X,target,speed,waiting_list)
 
     
 #%% ################## MOVES OF A PEDESTRIAN ##################################
@@ -103,7 +118,7 @@ def neighboors_computation(loc, grid_size) :
     return neighboors
 
 
-def one_step(env,pedestrian_number,X) :
+def one_step(env,pedestrian_number,X, speed, waiting_list) :
     
     """ Simulation of 1 step of all pedestrians given the target and obstacles, 
     and the pedestrians locations"""
@@ -112,10 +127,15 @@ def one_step(env,pedestrian_number,X) :
         loc = X[i] #pedestrian location
         
         if env[loc[0],loc[1]] == 3 :  #stop when the first pedestrian is on the target
-            return X
+            return X,waiting_list
         
+        elif ((waiting_list[i]+1) *speed[i])   < 1: #the pedestrian should wait
+            waiting_list[i] += 1
         
+            
         else : 
+            waiting_list[i] = 0 #the pedestrian will move at this time
+
             #get the list of index of the neighboors
             neighboors = neighboors_computation(loc, grid_size)
             
@@ -137,17 +157,17 @@ def one_step(env,pedestrian_number,X) :
             to_be_changed = neighboors[np.argmax(dist)] #go to the closest path
             X[i] = to_be_changed 
             
-    return X
+    return X,waiting_list
         
 
-def simulation(env,pedestrian_number,X,N) : 
+def simulation(env,pedestrian_number,X,N, speed, waiting_list) : 
     """ Simulate all the positions of the pedestrians N times 
     or until on of them reaches destination"""
     
     positions = []
     for step in range(N) : 
         M = env.copy()
-        X = one_step(env,pedestrian_number,X)
+        X = one_step(env,pedestrian_number,X,speed, waiting_list)
     
     
         for i in range(len(X)) : 
@@ -169,10 +189,12 @@ def simulation(env,pedestrian_number,X,N) :
 n = 25 #number of cases of the grid
 pedestrian_number = 1
 obstacle_number = 2
-grid_size, env, X,target =  initialization(n, pedestrian_number,obstacle_number)
+grid_size, env,X,target,speed,waiting_list=  initialization(n, pedestrian_number,obstacle_number)
 
+global time
+time = 0 
 
-
+#%%
 ##################### Initialization of graphic interface ###################
 
 master = tk.Tk()
@@ -223,17 +245,37 @@ for l in range(pedestrian_number) :
 grid_frame.pack(side=LEFT)
 
 
-
 ########################### MOVING PEDESTRIANS ############################
 button = tk.Button(master, text = "Simulate one step ")
 
+global timer 
+timer = tk.Label(master, text="Time : " + str(time))
+timer.pack(side = RIGHT)
+
+
+
 def get_X() :  
     return X, X.copy()
+
+
+def get_waiting_list() :
+    return waiting_list
+
+def get_time() : 
+    
+    return time
+
+def update_time() : 
+    global time
+    time += 1
+    return time
   
 
 def leftclick(event):
+    
     X,old_X = get_X()
-    X = one_step(env,pedestrian_number,X) 
+    waiting_list = get_waiting_list()
+    X,waiting_list = one_step(env,pedestrian_number,X,speed,waiting_list) 
 
     
     for p in range(pedestrian_number) : 
@@ -257,9 +299,22 @@ def leftclick(event):
             button1.grid(sticky="wens") #makes the button expand
             
     
+    time = get_time()
+    time = update_time()
+    
+    global timer
+    timer.pack_forget()
+    timer = tk.Label(master, text="Time : " + str(time))
+    timer.pack(side = RIGHT)
+    #timer.labelText = "Time : " + str(time)
+    
+    
     
 button.bind("<Button-1>", leftclick)
 button.pack(side=RIGHT)
+
+
+
 tk.mainloop()
 
 #%%                               TASK 2
@@ -268,17 +323,20 @@ tk.mainloop()
 
 ############################## INITIALIZATION ########################
 n = 2500 #number of cases of the grid
-pedestrian_number = 1
+pedestrian_number = 2
 grid_size = int(np.sqrt(n))
     
   ##################      PLACING THE TARGET #########
 env = np.zeros((grid_size,grid_size)) 
 env[24][24] = 3
 target = 24,24 
-X = [[4,24]]
+X = [[4,24],[24,4]]
+speed = [1,0.3334]
+waiting_list = [0,0]
+global time
+time = 0
 
-
-
+#%%
 ##################### Initialization of graphic interface ###################
 
 master = tk.Tk()
@@ -329,24 +387,44 @@ for l in range(pedestrian_number) :
 grid_frame.pack(side=LEFT)
 
 
-
 ########################### MOVING PEDESTRIANS ############################
 button = tk.Button(master, text = "Simulate one step ")
 
+global timer 
+timer = tk.Label(master, text="Time : " + str(time))
+timer.pack(side = RIGHT)
+
+
+
 def get_X() :  
     return X, X.copy()
+
+
+def get_waiting_list() :
+    return waiting_list
+
+def get_time() : 
+    
+    return time
+
+def update_time() : 
+    global time
+    time += 1
+    return time
   
 
 def leftclick(event):
+    
     X,old_X = get_X()
-    X = one_step(env,pedestrian_number,X) 
+    waiting_list = get_waiting_list()
+    X,waiting_list = one_step(env,pedestrian_number,X,speed,waiting_list) 
 
     
     for p in range(pedestrian_number) : 
         if old_X[p] != X[p] : 
             #change the old location to white : 
             frame = tk.Frame(grid_frame,  width=15, height=15) #their units in pixels
-            button1 = tk.Button(frame, bg = "cyan")
+            button1 = tk.Button(frame, bg = "white")
             frame.grid_propagate(False) #disables resizing of frame
             frame.columnconfigure(0, weight=1) #enables button to fill frame
             frame.rowconfigure(0,weight=1) #any positive number would do the trick
@@ -363,9 +441,22 @@ def leftclick(event):
             button1.grid(sticky="wens") #makes the button expand
             
     
+    time = get_time()
+    time = update_time()
+    
+    global timer
+    timer.pack_forget()
+    timer = tk.Label(master, text="Time : " + str(time))
+    timer.pack(side = RIGHT)
+    #timer.labelText = "Time : " + str(time)
+    
+    
     
 button.bind("<Button-1>", leftclick)
 button.pack(side=RIGHT)
+
+
+
 tk.mainloop()
 
 #%%                                     TASK 3
@@ -384,6 +475,12 @@ env[24][24] = 3
 target = 24,24 
 X = [[4,24],[44,24],[24,4],[24,44],[13,6]]
 
+speed = [1 for i in range(pedestrian_number)]
+waiting_list = [0 for i in range(pedestrian_number)]
+global time
+time = 0
+
+#%%
 ##################### Initialization of graphic interface ###################
 
 master = tk.Tk()
@@ -434,26 +531,44 @@ for l in range(pedestrian_number) :
 grid_frame.pack(side=LEFT)
 
 
-
-########################### MOVING PEDESTRIANS WHEN CLICKING ############################
+########################### MOVING PEDESTRIANS ############################
 button = tk.Button(master, text = "Simulate one step ")
 
+global timer 
+timer = tk.Label(master, text="Time : " + str(time))
+timer.pack(side = RIGHT)
+
+
+
 def get_X() :  
-    """Returns X and a copy of it to be stored in order to compare the movement
-    """
-    return X, X.copy() 
+    return X, X.copy()
+
+
+def get_waiting_list() :
+    return waiting_list
+
+def get_time() : 
+    
+    return time
+
+def update_time() : 
+    global time
+    time += 1
+    return time
   
 
 def leftclick(event):
+    
     X,old_X = get_X()
-    X = one_step(env,pedestrian_number,X) 
+    waiting_list = get_waiting_list()
+    X,waiting_list = one_step(env,pedestrian_number,X,speed,waiting_list) 
 
     
     for p in range(pedestrian_number) : 
         if old_X[p] != X[p] : 
             #change the old location to white : 
             frame = tk.Frame(grid_frame,  width=15, height=15) #their units in pixels
-            button1 = tk.Button(frame, bg = "cyan")
+            button1 = tk.Button(frame, bg = "white")
             frame.grid_propagate(False) #disables resizing of frame
             frame.columnconfigure(0, weight=1) #enables button to fill frame
             frame.rowconfigure(0,weight=1) #any positive number would do the trick
@@ -470,10 +585,23 @@ def leftclick(event):
             button1.grid(sticky="wens") #makes the button expand
             
     
+    time = get_time()
+    time = update_time()
+    
+    global timer
+    timer.pack_forget()
+    timer = tk.Label(master, text="Time : " + str(time))
+    timer.pack(side = RIGHT)
+    #timer.labelText = "Time : " + str(time)
+    
+    
     
 button.bind("<Button-1>", leftclick)
 button.pack(side=RIGHT)
-tk.mainloop() #loop to detect a new click
+
+
+
+tk.mainloop()
 
 
 #%%############################## TASK 4 
@@ -561,8 +689,14 @@ def one_step(env,pedestrian_number,X) :
             
     return X
 
+
+speed = [1 for i in range(pedestrian_number)]
+waiting_list = [0 for i in range(pedestrian_number)]
+global time
+time = 0
+
 #%%
-    ##################### Initialization of graphic interface ###################
+##################### Initialization of graphic interface ###################
 
 master = tk.Tk()
 grid_frame = tk.Frame( master) 
@@ -612,26 +746,44 @@ for l in range(pedestrian_number) :
 grid_frame.pack(side=LEFT)
 
 
-
-########################### MOVING PEDESTRIANS WHEN CLICKING ############################
+########################### MOVING PEDESTRIANS ############################
 button = tk.Button(master, text = "Simulate one step ")
 
+global timer 
+timer = tk.Label(master, text="Time : " + str(time))
+timer.pack(side = RIGHT)
+
+
+
 def get_X() :  
-    """Returns X and a copy of it to be stored in order to compare the movement
-    """
-    return X, X.copy() 
+    return X, X.copy()
+
+
+def get_waiting_list() :
+    return waiting_list
+
+def get_time() : 
+    
+    return time
+
+def update_time() : 
+    global time
+    time += 1
+    return time
   
 
 def leftclick(event):
+    
     X,old_X = get_X()
-    X = one_step(env,pedestrian_number,X) 
+    waiting_list = get_waiting_list()
+    X,waiting_list = one_step(env,pedestrian_number,X,speed,waiting_list) 
 
     
     for p in range(pedestrian_number) : 
         if old_X[p] != X[p] : 
             #change the old location to white : 
             frame = tk.Frame(grid_frame,  width=15, height=15) #their units in pixels
-            button1 = tk.Button(frame, bg = "cyan")
+            button1 = tk.Button(frame, bg = "white")
             frame.grid_propagate(False) #disables resizing of frame
             frame.columnconfigure(0, weight=1) #enables button to fill frame
             frame.rowconfigure(0,weight=1) #any positive number would do the trick
@@ -648,10 +800,22 @@ def leftclick(event):
             button1.grid(sticky="wens") #makes the button expand
             
     
+    time = get_time()
+    time = update_time()
+    
+    global timer
+    timer.pack_forget()
+    timer = tk.Label(master, text="Time : " + str(time))
+    timer.pack(side = RIGHT)
+    #timer.labelText = "Time : " + str(time)
+    
+    
     
 button.bind("<Button-1>", leftclick)
 button.pack(side=RIGHT)
-tk.mainloop() #loop to detect a new click
 
-#%%
+
+
+tk.mainloop()
+
     
