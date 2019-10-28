@@ -30,18 +30,18 @@ def randomly_initialize(n, pedestrian_number,obstacle_number) :
     
     """ Initialize the position of the target, the pedestrians and the obstacles
     RANDOMLY
-     Code : 0 = empty cell, 1 = pedestrian, 2 = obstacle, 3 = Target """
+    env is the matrix of non-moving objects, X the current location of pedestrianc
+     Code : (for env) 0 = empty cell, 2 = obstacle, 3 = Target """
     
-    ##################     GETTING THE GRID HEIGHT AND WIDNESS ###########
+    #grid
     grid_size = int(np.sqrt(n))
     
-    ##################      PLACING THE TARGET AND THE OBSTACLES #########
-    env = np.zeros((grid_size,grid_size)) #obstacles and target
+    ###################non moving objects
+    env = np.zeros((grid_size,grid_size)) #obstacles and target : in a matrix
     #target 
     h,v  = np.random.randint(grid_size), np.random.randint(grid_size)
     env[h][v] = 3
     target = h,v 
-    
     #obstacles:
     obstacles_location = []
     for i in range(obstacle_number) : 
@@ -51,29 +51,23 @@ def randomly_initialize(n, pedestrian_number,obstacle_number) :
         env[h][v] = 2
         obstacles_location.append([h,v])
         
-    ####################        PLACING THE PEDESTRIANS  ######################
-        
-      #pedestrian place :
+    ########################moving objects 
+    #pedestrians 
     X =  [[] for i in range(pedestrian_number)] 
-    
-    #speed : here the pedestrians have all the same speed of 1case/s
-    speed = [1 for i in range(pedestrian_number)] #cannot be > 1case/s
-    waiting_list = [0 for i in range(pedestrian_number)] #howlong the pedestrian are in this position
-    global time 
-    time = 0 #initialisation, time set to zero
-    
-    
-
-    
-    
     for i in range(pedestrian_number) : 
         h,v  = np.random.randint(grid_size), np.random.randint(grid_size)
         while env[h][v] > 0 : #don't put 2 ped. in the same place, don't put them in the target
             h,v  = np.random.randint(grid_size), np.random.randint(grid_size)
         X[i] = [h,v]
-        
-        
     
+    #speed and time
+    speed = [1 for i in range(pedestrian_number)] #speed of each pedestrian
+    #unit case/click, should not be >1
+    waiting_list = [0 for i in range(pedestrian_number)] #time each pedestrian had
+    #wait since its last move
+    global time
+    time = 0 #initialisation, time set to zero
+        
     return(grid_size, env, X,target,speed,waiting_list)
     
 
@@ -187,9 +181,7 @@ def simulation(env,pedestrian_number,X,N, speed, waiting_list) :
 
 
 
-#%%
-    
-
+#%% RUN THE INTERFACE
 
 n = 25 #number of cases of the grid
 pedestrian_number = 1
