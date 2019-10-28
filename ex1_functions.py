@@ -124,42 +124,84 @@ def distance_matrix(env, grid_size, target):
 
 #%% ################## MOVES OF A PEDESTRIAN ##################################
 
-def one_step(env, pedestrian_ID, X, distance_matrix, grid_size) :
+def one_step(env,pedestrian_number,X, speed, waiting_list) :
     
     """ Simulation of 1 step of all pedestrians given the target and obstacles, 
     and the pedestrians locations"""
 
-    loc = X[pedestrian_ID] #pedestrian location
-    neighboors = neighboors_computation(loc, grid_size, env)
-    possible_moves = []
-    for neigh in neighboors:
-        if [neigh[0], neigh[1]] in X:
-            possible_moves.append(-1)
-        else:
-            possible_moves.append(distance_matrix[neigh[0], neigh[1]])
-    possible_moves[-1] = distance_matrix[neigh[0], neigh[1]]
-    best_move = len(possible_moves)-1
-    for neigh in range(len(possible_moves)):
-        print(neigh, possible_moves[neigh])
-        if possible_moves[neigh] < possible_moves[best_move] and possible_moves[neigh] != -1:
-            best_move = neigh
-        print('donc ', best_move, possible_moves[best_move])
-                   
-    X[pedestrian_ID] = neighboors[best_move]
+    for i in range(pedestrian_number):
+        loc = X[i] #pedestrian location
+        
+        if env[loc[0],loc[1]] == 3 :  #stop when the first pedestrian is on the target
+            return X,waiting_list
+        
+        elif ((waiting_list[i]+1) *speed[i])   < 1: #the pedestrian should wait
+            waiting_list[i] += 1
+        
             
-    return X
+        else : 
+            waiting_list[i] = 0 #the pedestrian will move at this time
+
+            #get the list of index of the neighboors
+            neighboors = neighboors_computation(loc, grid_size)
+            
+            
+            dist = [] #list of all distances per neighboor
+            for k in range(len(neighboors)) :
+                neigh = neighboors[k]
+
+                if env[neigh[0]][neigh[1]] == 2 : #obstacle : set d to infinite 
+                    d = 10*n 
+                    
+                if neigh in X : # other pedestrian neighboor : set d to infinite 
+                    d = 10*n 
+                else : 
+                    d = np.sqrt((target[0]-neigh[0])**(2) + (target[1]-neigh[1])**(2))
+                
+                dist.append(-d)
+        
+            to_be_changed = neighboors[np.argmax(dist)] #go to the closest path
+            X[i] = to_be_changed 
+            
+    return X,waiting_list
+        
+
+def simulation(env,pedestrian_number,X,N, speed, waiting_list) : 
+    """ Simulate all the positions of the pedestrians N times 
+    or until on of them reaches destination returns a matrix"""
+    
+    positions = []
+    for step in range(N) : 
+        M = env.copy()
+        X = one_step(env,pedestrian_number,X,speed, waiting_list)
+    
+    
+        for i in range(len(X)) : 
+            M[X[i][0]][X[i][1]] = 1
+            positions.append(M)
+            if np.sum(np.sum(M)) == pedestrian_number : 
+                return positions
+
+            
+    return positions
 
 
 #%%                               Graphic simulation
-
-
 ##################### Initialization of graphic interface ###################
-def simulation(n, pedestrian_number, obstacle_number, env, grid_size, X, target):
+#Graphic interface inspired from : https://stackoverflow.com/questions/23709154/displaying-square-tkinter-buttons
+
+
+
+
+def run_graphic(n, pedestrian_number,obstacle_number,grid_size, env,X,target,speed,waiting_list) : 
+
+    global time
+    time = 0 
     
     master = tk.Tk()
     grid_frame = tk.Frame( master) 
-    for i in range(grid_size[0]) : 
-        for j in range(grid_size[1]) : 
+    for i in range(grid_size) : 
+        for j in range(grid_size) : 
     
             if env[i][j] == 3 : #target
     
@@ -204,27 +246,46 @@ def simulation(n, pedestrian_number, obstacle_number, env, grid_size, X, target)
     grid_frame.pack(side=LEFT)
     
     
-    
     ########################### MOVING PEDESTRIANS ############################
-    button = tk.Button(master, text = "Simulate one step ")
     
-    dist = distance_matrix(env, grid_size, target)
+    
+    
+    button = tk.Button(master, text = "Simulate one step ")
+    button.pack(side=RIGHT)
+    global timer 
+    timer = tk.Label(master, text="Time : " + str(time))
+    timer.pack(side = RIGHT)
+    
     
     def get_X() :  
         return X, X.copy()
+    
+    
+    def get_waiting_list() :
+        return waiting_list
+    
+    def get_time() : 
+        
+        return time
+    
+    def update_time() : 
+        global time
+        time += 1
+        return time
       
     
     def leftclick(event):
+        
         X,old_X = get_X()
-        X = X = one_step(env, pedestrian_number, X, dist, grid_size)
-    
+        waiting_list = get_waiting_list()
+        X,waiting_list = one_step(env,pedestrian_number,X,speed,waiting_list) 
     
         
         for p in range(pedestrian_number) : 
             if old_X[p] != X[p] : 
                 #change the old location to white : 
                 frame = tk.Frame(grid_frame,  width=15, height=15) #their units in pixels
-                button1 = tk.Button(frame, bg = "cyan")
+                button1 = tk.Button(frame, bg = "white")
                 frame.grid_propagate(False) #disables resizing of frame
                 frame.columnconfigure(0, weight=1) #enables button to fill frame
                 frame.rowconfigure(0,weight=1) #any positive number would do the trick
@@ -241,11 +302,25 @@ def simulation(n, pedestrian_number, obstacle_number, env, grid_size, X, target)
                 button1.grid(sticky="wens") #makes the button expand
                 
         
+        time = get_time()
+        time = update_time()
+        
+        global timer
+        timer.pack_forget()
+        timer = tk.Label(master, text="Time : " + str(time))
+        timer.pack(side = RIGHT)
+    
+        
+        
         
     button.bind("<Button-1>", leftclick)
     button.pack(side=RIGHT)
+    
+    
+    
     tk.mainloop()
-
+    
+    return 0 
 
 
 
