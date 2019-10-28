@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Mon Oct 28 20:40:03 2019
+Created on Mon Oct 28 23:09:32 2019
 
 @author: amelie
 """
@@ -11,9 +11,9 @@ import numpy as np
 import tkinter.font as tkFont
 import tkinter as tk
 from ex1_functions import * #be careful to be in the right current folder
-     
 
-#%% TASK 2 : 1 PEDESTRIAN AND 2500 CASES IN THE GRID
+#%% #TASK 3 5 PEDESTRIANS, ALL THE SAME SPEED, NO OBSTACLE
+
 
 #grid
 n = 2500 #number of cases of the grid
@@ -32,13 +32,11 @@ env[target[0]][target[1]] = 3
 obstacles_location = []
 obstacle_number = len(obstacles_location)
     
-    
 #speed and time
 speed = [1 for i in range(pedestrian_number)] #speed of each pedestrian
-#unit case/click, should be <= 1, here they all have the same speed
+#unit case/click, should be <= 1
 waiting_list = [0 for i in range(pedestrian_number)] #time each pedestrian had
 #wait since its last move
-
 global time
 time = 0
 
@@ -47,3 +45,4 @@ persistance = True #to see the path of the pedestrian
 
 run_graphic(n, pedestrian_number,obstacle_number,grid_size, 
             env,X,target,speed,waiting_list,persistance) 
+
