@@ -10,54 +10,8 @@ from tkinter import *
 import numpy as np
 import tkinter.font as tkFont
 import tkinter as tk
+import time
 
-#%% ######################### INITIALISATION ################################
-
- 
-#env represent a matrix with fix objects (target and X)
-#X is a list of the coordinates of the pedestrians during the simulation
-
-
-def initialization(n, pedestrian_number,obstacle_number) : 
-    
-    """ Initialize the position of the target, the pedestrians and the obstacles
-    RANDOMLY
-     Code : 0 = empty cell, 1 = pedestrian, 2 = obstacle, 3 = Target """
-    
-    ##################     GETTING THE GRID HEIGHT AND WIDNESS ###########
-    grid_size = int(np.sqrt(n))
-    
-    ##################      PLACING THE TARGET AND THE OBSTACLES #########
-    env = np.zeros((grid_size,grid_size)) #obstacles and target
-    #target 
-    h,v  = np.random.randint(grid_size), np.random.randint(grid_size)
-    env[h][v] = 3
-    target = h,v 
-    
-    #obstacles:
-    obstacles_location = []
-    for i in range(obstacle_number) : 
-        h,v  = np.random.randint(grid_size), np.random.randint(grid_size)
-        while env[h][v] > 0 : #don't put 2 ped. in the same place, don't put them in the target
-            h,v  = np.random.randint(grid_size), np.random.randint(grid_size)
-        env[h][v] = 2
-        obstacles_location.append([h,v])
-        
-    ####################        PLACING THE PEDESTRIANS  ######################
-        
-      #pedestrian place :
-    X =  [[] for i in range(pedestrian_number)] 
-    for i in range(pedestrian_number) : 
-        h,v  = np.random.randint(grid_size), np.random.randint(grid_size)
-        while env[h][v] > 0 : #don't put 2 ped. in the same place, don't put them in the target
-            h,v  = np.random.randint(grid_size), np.random.randint(grid_size)
-        X[i] = [h,v]
-        
-        
-    
-    return(grid_size, env, X,target)
-
-    
 #%% ################## DETERMINATION OF VALID NEIGHBOORS CELLS ##################################
     
 def neighboors_computation(loc, grid_size, env) :
@@ -83,7 +37,7 @@ def neighboors_computation(loc, grid_size, env) :
     
     possible = [0 for j in range(9)]
     
-    if loc[1] < grid_size-1:
+    if loc[1] < grid_size[1]-1:
         neigh = neighboors[7]
         if env[neigh[0], neigh[1]] == 2:
             possible[2] = 1
@@ -94,7 +48,7 @@ def neighboors_computation(loc, grid_size, env) :
         possible[5] = 1
         possible[7] = 1
             
-    if loc[0] < grid_size-1:
+    if loc[0] < grid_size[0]-1:
         neigh = neighboors[4]
         if env[neigh[0], neigh[1]] == 2:
             possible[4] = 1
@@ -158,10 +112,10 @@ def distance_matrix(env, grid_size, target):
         # Assign distance + 1 for its neigboors
      
     
-    for line in range(grid_size):
-        for column in range(grid_size):
+    for line in range(grid_size[0]):
+        for column in range(grid_size[1]):
             if dist[line, column] != -1:
-                dist[line, column] += np.sqrt((line - target[0])**2 + (column - target[1])**2)/(2*grid_size**2)
+                dist[line, column] += np.sqrt((line - target[0])**2 + (column - target[1])**2)/(2*grid_size[0]*grid_size[1])
     # Add a decima taking euclidian distance into consideration
     # This helps to difference the distance to the target between two cells with same Djikstra distance
     
@@ -171,36 +125,144 @@ def distance_matrix(env, grid_size, target):
 
 #%% ################## MOVES OF A PEDESTRIAN ##################################
 
-def one_step(env, pedestrian_number, X, distance_matrix, grid_size) :
+def one_step(env, pedestrian_id, X, distance_matrix, grid_size) :
     
     """ Simulation of 1 step of all pedestrians given the target and obstacles, 
     and the pedestrians locations"""
 
-    for ped in range(pedestrian_number):
-        loc = X[ped] #pedestrian location
-        neighboors = neighboors_computation(loc, grid_size, env)
-        possible_moves = []
-        for neigh in neighboors:
-            if [neigh[0], neigh[1]] in X:
-                possible_moves.append(-1)
-            else:
-                possible_moves.append(distance_matrix[neigh[0], neigh[1]])
-        possible_moves[-1] = distance_matrix[neigh[0], neigh[1]]
-        best_move = len(possible_moves)-1
-        for neigh in range(len(possible_moves)):
-            print(neigh, possible_moves[neigh])
-            if possible_moves[neigh] < possible_moves[best_move] and possible_moves[neigh] != -1:
-                best_move = neigh
-            print('donc ', best_move, possible_moves[best_move])
+    ped = pedestrian_id
+    loc = X[ped] #pedestrian location
+    neighboors = neighboors_computation(loc, grid_size, env)
+    possible_moves = []
+    for neigh in neighboors:
+        if [neigh[0], neigh[1]] in X:
+            possible_moves.append(-1)
+        else:
+            possible_moves.append(distance_matrix[neigh[0], neigh[1]])
+    possible_moves[-1] = distance_matrix[neigh[0], neigh[1]]
+    best_move = len(possible_moves)-1
+    for neigh in range(len(possible_moves)):
+        if possible_moves[neigh] < possible_moves[best_move] and possible_moves[neigh] != -1:
+            best_move = neigh
                     
-        X[ped] = neighboors[best_move]
+    X[ped] = neighboors[best_move]
             
     return X
 
 
+#%%                               Graphic simulation
 
 
+##################### Initialization of graphic interface ###################
+def simulation(n, pedestrian_number, env, grid_size, X, target, pedestrian_speed, duration):
+    
+    master = tk.Tk()
+    grid_frame = tk.Frame( master) 
+    for i in range(grid_size[0]) : 
+        for j in range(grid_size[1]) : 
+    
+            if env[i][j] == 3 : #target
+    
+                frame = tk.Frame(grid_frame,  width=15, height=15) #their units in pixels
+                button1 = tk.Button(frame, bg = "red")
+                frame.grid_propagate(False) #disables resizing of frame
+                frame.columnconfigure(0, weight=1) #enables button to fill frame
+                frame.rowconfigure(0,weight=1) #any positive number would do the trick
+                frame.grid(row=i, column=j) #put frame where the button should be
+                button1.grid(sticky="wens") #makes the button expand
+    
+            elif env[i][j] == 2 : 
+                frame = tk.Frame(grid_frame, width=15, height=15) #their units in pixels
+                button1 = tk.Button(frame, bg = "black")
+                frame.grid_propagate(False) #disables resizing of frame
+                frame.columnconfigure(0, weight=1) #enables button to fill frame
+                frame.rowconfigure(0,weight=1) #any positive number would do the trick
+                frame.grid(row=i, column=j) #put frame where the button should be
+                button1.grid(sticky="wens") #makes the button expand
+                
+            else : 
+                frame = tk.Frame(grid_frame,  width=15, height=15) #their units in pixels
+                button1 = tk.Button(frame, bg = "white")
+                frame.grid_propagate(False) #disables resizing of frame
+                frame.columnconfigure(0, weight=1) #enables button to fill frame
+                frame.rowconfigure(0,weight=1) #any positive number would do the trick
+                frame.grid(row=i, column=j) #put frame where the button should be
+                button1.grid(sticky="wens") #makes the button expand
+            
+            
+    #####################    PEDESTRIANS
+    for l in range(pedestrian_number) : 
+        i,j = X[l]
+        frame = tk.Frame(grid_frame, width=15, height=15) #their units in pixels
+        button2 = tk.Button(frame, bg = "blue")
+        frame.grid_propagate(False) #disables resizing of frame
+        frame.columnconfigure(0, weight=1) #enables button to fill frame
+        frame.rowconfigure(0,weight=1) #any positive number would do the trick
+        frame.grid(row=i, column=j) #put frame where the button should be
+        button2.grid(sticky="wens") #makes the button expand
+    
+    grid_frame.pack(side=LEFT)
+    
+    timing_text = tk.Label(master, text="  Simulation time in s:     ")
+    timing_text.pack(side=TOP)
+    
+    timing_display = tk.Label(master, text="       0 s")
+    timing_display.pack(side=TOP)
+    
+    
+    ########################### MOVING PEDESTRIANS ############################
+    button = tk.Button(master, text = "Start simulation ")
+    
+    dist = distance_matrix(env, grid_size, target)
+    
+    def get_X() :  
+        return X, X.copy()
+      
+    
+    def leftclick(event):
+        start = time.perf_counter()
+        pedestrian_waiting = [0.4/pedestrian_speed[i] + start for i in range(pedestrian_number)]
+        while time.perf_counter()-start<duration:
+            timed = time.perf_counter()
+            if timed>np.min(pedestrian_waiting):
+                X,old_X = get_X()
+                for p in range(pedestrian_number):
+                    if pedestrian_waiting[p] < timed:
+                        X = one_step(env, p, X, dist, grid_size) 
+                        pedestrian_waiting[p] += 0.4/pedestrian_speed[p]
+                        
+                    if old_X[p] != X[p] : 
+                        #change the old location to white : 
+                        frame = tk.Frame(grid_frame,  width=15, height=15) #their units in pixels
+                        button1 = tk.Button(frame, bg = "cyan")
+                        frame.grid_propagate(False) #disables resizing of frame
+                        frame.columnconfigure(0, weight=1) #enables button to fill frame
+                        frame.rowconfigure(0,weight=1) #any positive number would do the trick
+                        frame.grid(row=old_X[p][0], column=old_X[p][1]) #put frame where the button should be
+                        button1.grid(sticky="wens") #makes the button expand
+                        
+                        #put the new location to blue :
+                        frame = tk.Frame(grid_frame,  width=15, height=15) #their units in pixels
+                        button1 = tk.Button(frame, bg = "blue")
+                        frame.grid_propagate(False) #disables resizing of frame
+                        frame.columnconfigure(0, weight=1) #enables button to fill frame
+                        frame.rowconfigure(0,weight=1) #any positive number would do the trick
+                        frame.grid(row=X[p][0], column=X[p][1]) #put frame where the button should be
+                        button1.grid(sticky="wens") #makes the button expand
 
+                        timing_display.configure(text="       " + str(int((timed-start)*100)/100) + "s")
+                        button1.update()
+                    
+        
+        
+    button.bind("<Button-1>", leftclick)
+    button.pack(side=RIGHT)
+    
+    
+
+    tk.mainloop()
+
+    
 
 
 
