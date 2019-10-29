@@ -34,20 +34,20 @@ def randomly_initialize(n, pedestrian_number,obstacle_number) :
      Code : (for env) 0 = empty cell, 2 = obstacle, 3 = Target """
     
     #grid
-    grid_size = int(np.sqrt(n))
+    grid_side = int(np.sqrt(n)) #size of 1 side of the grid
     
     ###################non moving objects
-    env = np.zeros((grid_size,grid_size)) #obstacles and target : in a matrix
+    env = np.zeros((grid_side,grid_side)) #obstacles and target : in a matrix
     #target 
-    h,v  = np.random.randint(grid_size), np.random.randint(grid_size)
+    h,v  = np.random.randint(grid_side), np.random.randint(grid_side)
     env[h][v] = 3
     target = h,v 
     #obstacles:
     obstacles_location = []
     for i in range(obstacle_number) : 
-        h,v  = np.random.randint(grid_size), np.random.randint(grid_size)
+        h,v  = np.random.randint(grid_side), np.random.randint(grid_side)
         while env[h][v] > 0 : #don't put 2 ped. in the same place, don't put them in the target
-            h,v  = np.random.randint(grid_size), np.random.randint(grid_size)
+            h,v  = np.random.randint(grid_side), np.random.randint(grid_side)
         env[h][v] = 2
         obstacles_location.append([h,v])
         
@@ -55,9 +55,9 @@ def randomly_initialize(n, pedestrian_number,obstacle_number) :
     #pedestrians 
     X =  [[] for i in range(pedestrian_number)] 
     for i in range(pedestrian_number) : 
-        h,v  = np.random.randint(grid_size), np.random.randint(grid_size)
+        h,v  = np.random.randint(grid_side), np.random.randint(grid_side)
         while env[h][v] > 0 : #don't put 2 ped. in the same place, don't put them in the target
-            h,v  = np.random.randint(grid_size), np.random.randint(grid_size)
+            h,v  = np.random.randint(grid_side), np.random.randint(grid_side)
         X[i] = [h,v]
     
     #speed and time
@@ -68,15 +68,15 @@ def randomly_initialize(n, pedestrian_number,obstacle_number) :
     global time
     time = 0 #initialisation, time set to zero
         
-    return(grid_size, env, X,target,speed,waiting_list)
+    return(grid_side, env, X,target,speed,waiting_list)
     
 
 
 #%% ################## MOVING OF A PEDESTRIAN ##################################
     
-def neighboors_computation(loc, grid_size) :
+def neighboors_computation(loc, grid_side) :
     """ Compute the index of neighbooring cases of a pedestrian given the location of the 
-    pedestrian and the grid size 
+    pedestrian and the grid side 
     loc = index of the pedestrian location"""
     
     ######## ALL POSSIBILITIES OF NEIGHBOORS : ##############################
@@ -93,12 +93,12 @@ def neighboors_computation(loc, grid_size) :
             
     
     ################## ELEMINATION OF THE NON-EXISTING NEIGHBOORING CASES ####
-    if loc[0] >= grid_size-1 or loc[1] >= grid_size-1 or loc[0] == 0 or loc[1] == 0:
+    if loc[0] >= grid_side-1 or loc[1] >= grid_side-1 or loc[0] == 0 or loc[1] == 0:
     
         #down and right boundaries
         l = 0
         while l < len(neighboors) :
-            if neighboors[l][0] >= grid_size or neighboors[l][1] >= grid_size : 
+            if neighboors[l][0] >= grid_side or neighboors[l][1] >= grid_side : 
                 del neighboors[l]
                 l -= 1
             l += 1
@@ -134,7 +134,7 @@ def one_step(env,pedestrian_number,X, speed, waiting_list) :
             waiting_list[i] = 0 #the pedestrian will move at this time
 
             #get the list of index of the neighboors
-            neighboors = neighboors_computation(loc, grid_size)
+            neighboors = neighboors_computation(loc, grid_side)
             
             
             dist = [] #list of all distances per neighboor
@@ -186,7 +186,7 @@ def simulation(env,pedestrian_number,X,N, speed, waiting_list) :
 n = 25 #number of cases of the grid
 pedestrian_number = 1
 obstacle_number = 0
-grid_size, env,X,target,speed,waiting_list=  randomly_initialize(n, pedestrian_number,obstacle_number)
+grid_side, env,X,target,speed,waiting_list=  randomly_initialize(n, pedestrian_number,obstacle_number)
 
 global time
 time = 0 
@@ -197,8 +197,8 @@ time = 0
 
 master = tk.Tk()
 grid_frame = tk.Frame( master) 
-for i in range(grid_size) : 
-    for j in range(grid_size) : 
+for i in range(grid_side) : 
+    for j in range(grid_side) : 
 
         if env[i][j] == 3 : #target
 

@@ -17,12 +17,17 @@ from ex1_functions import * #be careful to be in the right current folder
 
 
 #%% To compute this task, we found it useful to change the way we calcul neighboors
-#IN THIS SECTION : we compute a matrix of distances, we say that neighboors that are in the 
-#corner or on an obstacle are not anymore neughboors
+# IN THIS SECTION : we compute a matrix of distances, we say that neighboors that are in the 
+# corner or on an obstacle are not anymore neighboors
 
 
  ################## DETERMINATION OF VALID NEIGHBOORS CELLS ##################################
     
+ 
+# In order to compute the movement arround a corner and deal with the issue of scratching/going threw a wall:
+# We recompute the neighboors function, considering that if a diagonal case is next to an adjacent obstacle, it is no more a neighboor.
+ # This scenario will also be applied to the distance computation so that it does not slow down the pedestrian
+ 
 def neighboors_computation(loc, grid_size, env) :
     """ Compute the index of neighbooring cases of a pedestrian given the location of the 
     pedestrian and the grid size 
@@ -42,11 +47,11 @@ def neighboors_computation(loc, grid_size, env) :
                  [loc[0], loc[1]]]
             
     ####### AVOID OBSTACLES + CORNER CONSIDERTION : ######################
-#If one direct adjacent cell is an obstacle, then the corners directkly adjaent are not neighboors
+# If one direct adjacent cell is an obstacle, then the corners directly adjacent are not neighboors
     
     possible = [0 for j in range(9)]
     
-    if loc[1] < grid_size-1:
+    if loc[1] < grid_size[1]-1:
         neigh = neighboors[7]
         if env[neigh[0], neigh[1]] == 2:
             possible[2] = 1
@@ -57,7 +62,7 @@ def neighboors_computation(loc, grid_size, env) :
         possible[5] = 1
         possible[7] = 1
             
-    if loc[0] < grid_size-1:
+    if loc[0] < grid_size[0]-1:
         neigh = neighboors[4]
         if env[neigh[0], neigh[1]] == 2:
             possible[4] = 1
@@ -101,10 +106,12 @@ def neighboors_computation(loc, grid_size, env) :
 
  ################## COMPUTE THE MATRIX DISTANCE ##################################
 
+# Use of Dijkstra algorithm and additional euclidian distance feature
+
 def distance_matrix(env, grid_size, target):
-    dist = -1*np.ones(np.shape(env))
+    dist = -1*np.ones(np.shape(env)) # start considering all cells are to infinite distance of the target
     dist[target[0], target[1]] = 0
-        # Initialize the distance matrix with -1 everywhere, then start with the target
+        # The target is distance 0 from the target
     
     count = 0
     while count in dist:
@@ -122,59 +129,62 @@ def distance_matrix(env, grid_size, target):
         
      
     
-    for line in range(grid_size):
-        for column in range(grid_size):
+    for line in range(grid_size[0]):
+        for column in range(grid_size[1]):
             if dist[line, column] != -1:
-                dist[line, column] += np.sqrt((line - target[0])**2 + (column - target[1])**2)/(2*grid_size**2)
+                dist[line, column] += np.sqrt((line - target[0])**2 + (column - target[1])**2)/(2*grid_size[0]*grid_size[1])
     # Add a decima taking euclidian distance into consideration
-    # This helps to difference the distance to the target between two cells with same Djikstra distance
+    # This helps to difference the distance to the target between two cells with same Dijkstra distance
     
     
-    #we realise the obstacle avoidance in the computation of the neighboors above
+    # We realise the obstacle avoidance in the computation of the neighboors above
     return dist
 
 
 
  ################## MOVES OF A PEDESTRIAN ##################################
 
+
+# Now the function one_step implemented to simulate one step of all the pedestrians has to be updated
+# This is in order to incorporate the distance matrix and avoid obstacles to make it safely to the target
+ 
 def one_step(env,pedestrian_number,X,distance_matrix, speed, waiting_list,grid_size,target) : 
     
     """ Simulation of 1 step of all pedestrians given the target and obstacles, 
     and the pedestrians locations"""
-    n = grid_size**(2)
-    
+
     for i in range(pedestrian_number):
-        loc = X[i] #pedestrian location
+        loc = X[i] # pedestrian location
         neighboors = neighboors_computation(loc, grid_size, env)
         possible_moves = []
-        
-        if env[loc[0],loc[1]] == 3 :  #stop when the first pedestrian is on the target
-            return X,waiting_list
-        
-        elif ((waiting_list[i]+1) *speed[i])   < 1: #the pedestrian should wait
+
+        if ((waiting_list[i]+1) *speed[i])   < 1: #the pedestrian should wait
             waiting_list[i] += 1
         
             
         else : 
-            waiting_list[i] = 0 #the pedestrian will move at this time
+            waiting_list[i] = 0 # the pedestrian will move at this time
             for neigh in neighboors:
-                if [neigh[0], neigh[1]] in X:
-                    possible_moves.append(-1)
+                if [neigh[0], neigh[1]] in X: # if one adjacent cell is busy with another pedestrian, 
+                    possible_moves.append(-1) # then this cell is not reachable
                 else:
-                    possible_moves.append(distance_matrix[neigh[0], neigh[1]])
+                    possible_moves.append(distance_matrix[neigh[0], neigh[1]]) # else it is
             
-            possible_moves[-1] = distance_matrix[neigh[0], neigh[1]]
-            best_move = len(possible_moves)-1
+            possible_moves[-1] = distance_matrix[neigh[0], neigh[1]] 
+   # staying still is a possible move even though the cell is occupied (because it is by this very pedestrian)
+   # thus we add it
+   
+            best_move = len(possible_moves)-1 #By default, the best move is staying still
             
-            for neigh in range(len(possible_moves)):
+            for neigh in range(len(possible_moves)): # check all possibilities and see which is the closest to the target
                 print(neigh, possible_moves[neigh])
-                if possible_moves[neigh] < possible_moves[best_move] and possible_moves[neigh] != -1:
+                if possible_moves[neigh] < possible_moves[best_move] and possible_moves[neigh] != -1: 
+    # the best move is the one with the closest distance to the target, -1 is infinity
                     best_move = neigh
-                print('donc ', best_move, possible_moves[best_move])
                         
-            X[i] = neighboors[best_move]
+            X[i] = neighboors[best_move] # move towards the best cell
             
-    return X,waiting_list
+    return X, waiting_list
 
 
 
@@ -183,7 +193,7 @@ def one_step(env,pedestrian_number,X,distance_matrix, speed, waiting_list,grid_s
 
 #grid
 n = 2500 #number of cases of the grid
-grid_size = int(np.sqrt(n))
+grid_size = [int(np.sqrt(n)),int(np.sqrt(n))] #size of 1 side of the grid
 
 #Pedestrians
 pedestrian_number = 5
@@ -191,7 +201,7 @@ X = [[4,24],[44,24],[24,4],[24,44],[13,6]]
 
 #target
 target = 24,24 
-env = np.zeros((grid_size,grid_size)) #matrix of the non moving objects
+env = np.zeros((grid_size[0],grid_size[1])) #matrix of the non moving objects
 env[target[0]][target[1]] = 3
 
 #obstacles
@@ -215,22 +225,20 @@ time = 0
 #Graphic interface
 persistance = True #to see the path of the pedestrian
 
-run_graphic(n, pedestrian_number,obstacle_number,grid_size, 
-            env,X,target,speed,waiting_list,persistance) 
+run_graphic(n, pedestrian_number,obstacle_number,grid_size,env,X,target,speed,waiting_list,persistance)
 
 #%%##############################  Initialization TASK 4 - Chicken test 
 
 #grid
 n = 2500 #number of cases of the grid
-grid_size = int(np.sqrt(n))
-    
+grid_size = [int(np.sqrt(n)),int(np.sqrt(n))]    
 #pedestrian 
 pedestrian_number = 1
 X = [[24,4]]
 
 #target
 target = 24,24 
-env = np.zeros((grid_size,grid_size)) #matrix of the non moving objects
+env = np.zeros((grid_size[0],grid_size[1])) #matrix of the non moving objects
 env[target[0]][target[1]] = 3
 
 #obstacles
@@ -246,8 +254,8 @@ speed = [1 for i in range(pedestrian_number)] #speed of each pedestrian
 #unit case/click, should be <= 1
 waiting_list = [0 for i in range(pedestrian_number)] #time each pedestrian had
 #wait since its last move
-global time
-time = 0
+#global time
+#time = 0
 
 #Graphic interface
 persistance = True #to see the path of the pedestrian
