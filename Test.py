@@ -29,7 +29,7 @@ X = [[2,0]]
 pedestrian_speed = [1.33]
 duration = 30
 
-simulation(n, pedestrian_number, obstacle_number, env, grid_size, X, target, pedestrian_speed, duration)
+simulation(n, pedestrian_number, env, grid_size, X, target, pedestrian_speed, duration)
 
 
 
@@ -59,4 +59,4 @@ X = [[lin,col] for lin in range(25,30) for col in range(4)]
 pedestrian_speed = [1.33 for k in range(40)]
 duration = 30
 
-simulation(n, pedestrian_number, obstacle_number, env, grid_size, X, target, pedestrian_speed, duration)
+simulation(n, pedestrian_number, env, grid_size, X, target, pedestrian_speed, duration)
