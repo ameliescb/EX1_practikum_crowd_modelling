@@ -21,6 +21,7 @@ pedestrian_number = 1
 X = [[2,0]]
 
 #target and shape
+n = 5*500
 grid_size = [5,100]
 obstacle_number = 0
 target = 2,99 

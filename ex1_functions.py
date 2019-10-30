@@ -61,8 +61,8 @@ def randomly_initialize(n, pedestrian_number,obstacle_number) :
     #unit case/click, should not be >1
     waiting_list = [0 for i in range(pedestrian_number)] #time each pedestrian had
     #wait since its last move
-    global time
-    time = 0 #initialisation, time set to zero
+    global mytime
+    mytime = 0 #initialisation, time set to zero
     
     return(grid_side, env, X,target,speed,waiting_list)
     
@@ -73,10 +73,10 @@ def randomly_initialize(n, pedestrian_number,obstacle_number) :
 
 
 
-def run_graphic(n, pedestrian_number,obstacle_number,grid_size, env,X,target,speed,waiting_list,persistance) : 
+def run_graphic(n, pedestrian_number,obstacle_number,grid_size, env,X,target,speed,waiting_list,persistance,pixel=15) : 
 
-    global time
-    time = 0 
+    global mytime
+    mytime = 0 
     
     dist = distance_matrix(env, grid_size, target)
     
@@ -87,7 +87,7 @@ def run_graphic(n, pedestrian_number,obstacle_number,grid_size, env,X,target,spe
     
             if env[i][j] == 3 : #target
     
-                frame = tk.Frame(grid_frame,  width=15, height=15) #their units in pixels
+                frame = tk.Frame(grid_frame,  width=pixel, height=pixel) #their units in pixels
                 button1 = tk.Button(frame, bg = "red")
                 frame.grid_propagate(False) #disables resizing of frame
                 frame.columnconfigure(0, weight=1) #enables button to fill frame
@@ -96,7 +96,7 @@ def run_graphic(n, pedestrian_number,obstacle_number,grid_size, env,X,target,spe
                 button1.grid(sticky="wens") #makes the button expand
     
             elif env[i][j] == 2 : 
-                frame = tk.Frame(grid_frame, width=15, height=15) #their units in pixels
+                frame = tk.Frame(grid_frame, width=pixel, height=pixel) #their units in pixels
                 button1 = tk.Button(frame, bg = "black")
                 frame.grid_propagate(False) #disables resizing of frame
                 frame.columnconfigure(0, weight=1) #enables button to fill frame
@@ -105,7 +105,7 @@ def run_graphic(n, pedestrian_number,obstacle_number,grid_size, env,X,target,spe
                 button1.grid(sticky="wens") #makes the button expand
                 
             else : 
-                frame = tk.Frame(grid_frame,  width=15, height=15) #their units in pixels
+                frame = tk.Frame(grid_frame,  width=pixel, height=pixel) #their units in pixels
                 button1 = tk.Button(frame, bg = "white")
                 frame.grid_propagate(False) #disables resizing of frame
                 frame.columnconfigure(0, weight=1) #enables button to fill frame
@@ -117,7 +117,7 @@ def run_graphic(n, pedestrian_number,obstacle_number,grid_size, env,X,target,spe
     #####################    PEDESTRIANS
     for l in range(pedestrian_number) : 
         i,j = X[l]
-        frame = tk.Frame(grid_frame, width=15, height=15) #their units in pixels
+        frame = tk.Frame(grid_frame, width=pixel, height=pixel) #their units in pixels
         button2 = tk.Button(frame, bg = "blue")
         frame.grid_propagate(False) #disables resizing of frame
         frame.columnconfigure(0, weight=1) #enables button to fill frame
@@ -135,7 +135,7 @@ def run_graphic(n, pedestrian_number,obstacle_number,grid_size, env,X,target,spe
     button = tk.Button(master, text = "Simulate one step ")
     button.pack(side=RIGHT)
     global timer 
-    timer = tk.Label(master, text="Time : " + str(time))
+    timer = tk.Label(master, text="Time : " + str(mytime))
     timer.pack(side = RIGHT)
     
     
@@ -148,12 +148,12 @@ def run_graphic(n, pedestrian_number,obstacle_number,grid_size, env,X,target,spe
     
     def get_time() : 
         
-        return time
+        return mytime
     
     def update_time() : 
-        global time
-        time += 1
-        return time
+        global mytime
+        mytime += 1
+        return mytime
       
     
     def leftclick(event):
@@ -165,7 +165,7 @@ def run_graphic(n, pedestrian_number,obstacle_number,grid_size, env,X,target,spe
         for p in range(pedestrian_number) : 
             if old_X[p] != X[p] : 
                 #change the old location to white : 
-                frame = tk.Frame(grid_frame,  width=15, height=15) #their units in pixels
+                frame = tk.Frame(grid_frame,  width=pixel, height=pixel) #their units in pixels
                 if persistance == True : 
                     button1 = tk.Button(frame, bg = "cyan")
                 else : 
@@ -177,7 +177,7 @@ def run_graphic(n, pedestrian_number,obstacle_number,grid_size, env,X,target,spe
                 button1.grid(sticky="wens") #makes the button expand
                 
                 #put the new location to blue :
-                frame = tk.Frame(grid_frame,  width=15, height=15) #their units in pixels
+                frame = tk.Frame(grid_frame,  width=pixel, height=pixel) #their units in pixels
                 button1 = tk.Button(frame, bg = "blue")
                 frame.grid_propagate(False) #disables resizing of frame
                 frame.columnconfigure(0, weight=1) #enables button to fill frame
@@ -186,12 +186,12 @@ def run_graphic(n, pedestrian_number,obstacle_number,grid_size, env,X,target,spe
                 button1.grid(sticky="wens") #makes the button expand
                 
         
-        time = get_time()
-        time = update_time()
+        mytime = get_time()
+        mytime = update_time()
         
         global timer
         timer.pack_forget()
-        timer = tk.Label(master, text="Time : " + str(time))
+        timer = tk.Label(master, text="Time : " + str(mytime))
         timer.pack(side = RIGHT)
     
         
@@ -415,16 +415,16 @@ def single_step(env, pedestrian_id, X, distance_matrix, grid_size) :
 
 
 
-def run_real_time_graphic(n, pedestrian_number, env, grid_size, X, target, pedestrian_speed, duration):
+def run_real_time_graphic(n, pedestrian_number, env, grid_size, X, target, pedestrian_speed, duration, pixel=15, measure_flow=0):
     
     master = tk.Tk()
-    grid_frame = tk.Frame( master) 
+    grid_frame = tk.Frame( master)
     for i in range(grid_size[0]) : 
         for j in range(grid_size[1]) : 
     
             if env[i][j] == 3 : #target
     
-                frame = tk.Frame(grid_frame,  width=15, height=15) #their units in pixels
+                frame = tk.Frame(grid_frame,  width=pixel, height=pixel) #their units in pixels
                 button1 = tk.Button(frame, bg = "red")
                 frame.grid_propagate(False) #disables resizing of frame
                 frame.columnconfigure(0, weight=1) #enables button to fill frame
@@ -433,7 +433,7 @@ def run_real_time_graphic(n, pedestrian_number, env, grid_size, X, target, pedes
                 button1.grid(sticky="wens") #makes the button expand
     
             elif env[i][j] == 2 : 
-                frame = tk.Frame(grid_frame, width=15, height=15) #their units in pixels
+                frame = tk.Frame(grid_frame, width=pixel, height=pixel) #their units in pixels
                 button1 = tk.Button(frame, bg = "black")
                 frame.grid_propagate(False) #disables resizing of frame
                 frame.columnconfigure(0, weight=1) #enables button to fill frame
@@ -442,7 +442,7 @@ def run_real_time_graphic(n, pedestrian_number, env, grid_size, X, target, pedes
                 button1.grid(sticky="wens") #makes the button expand
                 
             else : 
-                frame = tk.Frame(grid_frame,  width=15, height=15) #their units in pixels
+                frame = tk.Frame(grid_frame,  width=pixel, height=pixel) #their units in pixels
                 button1 = tk.Button(frame, bg = "white")
                 frame.grid_propagate(False) #disables resizing of frame
                 frame.columnconfigure(0, weight=1) #enables button to fill frame
@@ -454,7 +454,7 @@ def run_real_time_graphic(n, pedestrian_number, env, grid_size, X, target, pedes
     #####################    PEDESTRIANS
     for l in range(pedestrian_number) : 
         i,j = X[l]
-        frame = tk.Frame(grid_frame, width=15, height=15) #their units in pixels
+        frame = tk.Frame(grid_frame, width=pixel, height=pixel) #their units in pixels
         button2 = tk.Button(frame, bg = "blue")
         frame.grid_propagate(False) #disables resizing of frame
         frame.columnconfigure(0, weight=1) #enables button to fill frame
@@ -470,6 +470,9 @@ def run_real_time_graphic(n, pedestrian_number, env, grid_size, X, target, pedes
     timing_display = tk.Label(master, text="       0 s")
     timing_display.pack(side=TOP)
     
+    flow_display = tk.Label(master, text="flow = speed * density")
+    flow_display.pack(side=TOP)
+    
     
     ########################### MOVING PEDESTRIANS ############################
     button = tk.Button(master, text = "Start simulation ")
@@ -481,6 +484,7 @@ def run_real_time_graphic(n, pedestrian_number, env, grid_size, X, target, pedes
       
     
     def leftclick(event):
+        m1, m2, m3 = 0, 0, 0
         start = time.perf_counter()
         pedestrian_waiting = [0.4/pedestrian_speed[i] + start for i in range(pedestrian_number)]
         while time.perf_counter()-start<duration:
@@ -488,13 +492,23 @@ def run_real_time_graphic(n, pedestrian_number, env, grid_size, X, target, pedes
             if timed>np.min(pedestrian_waiting):
                 X,old_X = get_X()
                 for p in range(pedestrian_number):
+                    print("DDDDDDDDDDDDDDD")
                     if pedestrian_waiting[p] < timed:
-                        X = single_step(env, p, X, dist, grid_size) 
+                        print("AAAAAAAAAAAAAAA")
+                        X = single_step(env, p, X, dist, grid_size)
+                        print(X[p])
                         pedestrian_waiting[p] += 0.4/pedestrian_speed[p]
-                        
-                    if old_X[p] != X[p] : 
-                        #change the old location to white : 
-                        frame = tk.Frame(grid_frame,  width=15, height=15) #their units in pixels
+                    if old_X[p] != X[p] :
+                        print("CCCCCCCCCCCCCCC")
+                        #change the old location to white :
+                        if ((start+10 <= time.perf_counter()) and (time.perf_counter() <= start+70)):
+                            if (X[p][0] == 2 and X[p][1] == 225):
+                                m1 += 1
+                            if (X[p][0] == 2 and X[p][1] == 250):
+                                m2 += 1
+                            if (X[p][0] == 1 and X[p][1] == 250):
+                                m3 += 1
+                        frame = tk.Frame(grid_frame,  width=pixel, height=pixel) #their units in pixels
                         button1 = tk.Button(frame, bg = "cyan")
                         frame.grid_propagate(False) #disables resizing of frame
                         frame.columnconfigure(0, weight=1) #enables button to fill frame
@@ -503,15 +517,16 @@ def run_real_time_graphic(n, pedestrian_number, env, grid_size, X, target, pedes
                         button1.grid(sticky="wens") #makes the button expand
                         
                         #put the new location to blue :
-                        frame = tk.Frame(grid_frame,  width=15, height=15) #their units in pixels
+                        frame = tk.Frame(grid_frame,  width=pixel, height=pixel) #their units in pixels
                         button1 = tk.Button(frame, bg = "blue")
                         frame.grid_propagate(False) #disables resizing of frame
                         frame.columnconfigure(0, weight=1) #enables button to fill frame
                         frame.rowconfigure(0,weight=1) #any positive number would do the trick
                         frame.grid(row=X[p][0], column=X[p][1]) #put frame where the button should be
                         button1.grid(sticky="wens") #makes the button expand
-
+                        
                         timing_display.configure(text="       " + str(int((timed-start)*100)/100) + "s")
+                        flow_display.configure(text="m1: " + str(m1) + " m2: " + str(m2) + " m3: " + str(m3))
                         button1.update()
                     
         
@@ -522,7 +537,6 @@ def run_real_time_graphic(n, pedestrian_number, env, grid_size, X, target, pedes
     
 
     tk.mainloop()
-
 
 
 
