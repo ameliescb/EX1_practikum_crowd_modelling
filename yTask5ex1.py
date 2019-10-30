@@ -44,37 +44,40 @@ run_real_time_graphic(n, pedestrian_number, env, grid_size, X, target, pedestria
 #%%                                TEST SCENARIO 7
 
 
-n = 25*100 #number of cases of the grid
-pedestrian_number = 13
-grid_size = [25,100]
+n = 100*100 #number of cases of the grid
+pedestrian_number = 50
+grid_size = [100,100]
     
   ##################      PLACING THE TARGET #########
 env = np.zeros((grid_size[0],grid_size[1]))
 
-env[12][99] = 3
-target = 12,99
+env[50][99] = 3
+target = 50,99
 
 # Obstacles
-for row in range(1,25,2):
+for row in range(1,100,2):
     for col in range(99):
         env[row][col] = 2
 
-X = [[row,0] for row in range(0,25,2)]
+X = [[row,0] for row in range(0,100,2)]
 
-pedestrian_speed = []
+def gaussian(x, mu, sig):
+    return np.exp(-np.power(x - mu, 2.) / (2 * np.power(sig, 2.)))
+
+pedestrian_speed = [0.6+gaussian(i/50+0.7, 1.2, 0.2) for i in range(50)]
 velocity = 0.5
 increase_velocity = 0.03
-for k in range(pedestrian_number): #1.33
-	pedestrian_speed.append(velocity)
-	velocity += increase_velocity*2
+#for k in range(pedestrian_number): #1.33
+#	pedestrian_speed[k] += np.random.normal(0, 0.2, 1)
+
 
 #for i in range(pedestrian_number):
 #    for j in range(0, pedestrian_number-i-1):
 #        if pedestrian_speed[j] > pedestrian_speed[j+1] :
 #        	pedestrian_speed[j], pedestrian_speed[j+1] = pedestrian_speed[j+1], pedestrian_speed[j]#
 
-print(pedestrian_speed)
+#print(pedestrian_speed)
 
-duration = 70
+duration = 15
 
-run_real_time_graphic(n, pedestrian_number, env, grid_size, X, target, pedestrian_speed, duration)
+run_real_time_graphic(n, pedestrian_number, env, grid_size, X, target, pedestrian_speed, duration, pixel=10)
