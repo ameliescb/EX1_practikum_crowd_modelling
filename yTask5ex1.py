@@ -13,14 +13,14 @@ import tkinter.font as tkFont
 import tkinter as tk
 from ex1_functions import * #be careful to be in the right current folder
 import time
+import random 
 
-#%%                                TEST SCENARIO 1
+#%%                                TEST SCENARIO 4
 
 pixel = 5
 density = 1
 n = 5*500 #number of cases of the grid
 pedestrian_number = 2400
-obstacle_number = 0
 grid_size = [5,500]
     
   ##################      PLACING THE TARGET #########
@@ -39,20 +39,42 @@ pedestrian_speed = [1.33 for k in range(pedestrian_number)] #1.33
 duration = 80
 
 run_real_time_graphic(n, pedestrian_number, env, grid_size, X, target, pedestrian_speed, duration, pixel, density)
-'''
-#speed and time
-speed = [0.66 for i in range(pedestrian_number)] #speed of each pedestrian.
-#unit case/click, should be <= 1
-# Here 1 click is 0.2 seconds and 1 case is 0.40 meters
-# so 1.33 m/s is a speed of 0.66
 
-waiting_list = [0 for i in range(pedestrian_number)] #time each pedestrian had
-#wait since its last move
-global time
-time = 0
 
-#Graphic interface
-persistance = True #to see the path of the pedestrian
-run_graphic(n, pedestrian_number,obstacle_number,grid_size, 
-            env,X,target,speed,waiting_list,persistance, pixel, 1)
-'''
+#%%                                TEST SCENARIO 7
+
+
+n = 25*100 #number of cases of the grid
+pedestrian_number = 13
+grid_size = [25,100]
+    
+  ##################      PLACING THE TARGET #########
+env = np.zeros((grid_size[0],grid_size[1]))
+
+env[12][99] = 3
+target = 12,99
+
+# Obstacles
+for row in range(1,25,2):
+    for col in range(99):
+        env[row][col] = 2
+
+X = [[row,0] for row in range(0,25,2)]
+
+pedestrian_speed = []
+velocity = 0.5
+increase_velocity = 0.03
+for k in range(pedestrian_number): #1.33
+	pedestrian_speed.append(velocity)
+	velocity += increase_velocity*2
+
+#for i in range(pedestrian_number):
+#    for j in range(0, pedestrian_number-i-1):
+#        if pedestrian_speed[j] > pedestrian_speed[j+1] :
+#        	pedestrian_speed[j], pedestrian_speed[j+1] = pedestrian_speed[j+1], pedestrian_speed[j]#
+
+print(pedestrian_speed)
+
+duration = 70
+
+run_real_time_graphic(n, pedestrian_number, env, grid_size, X, target, pedestrian_speed, duration)
