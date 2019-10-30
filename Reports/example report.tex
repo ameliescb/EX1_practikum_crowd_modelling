@@ -1,0 +1,65 @@
+\documentclass[10pt,a4paper]{article}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% MODIFY:
+
+\newcommand{\authorA}{Thomas Mustermann (1234567890)}
+\newcommand{\authorB}{Maria Musterfrau (1234567891)}
+\newcommand{\authorC}{Alexander Musterstudent (1234567892)}
+\newcommand{\groupNumber}{123} % - YOUR GROUP NUMBER
+\newcommand{\exerciseNumber}{1} % - THE NUMBER OF THE EXERCISE
+\newcommand{\sourceCodeLink}{https://www.github.com/link/to/our/github/project}
+
+\newcommand{\workPerAuthor}{
+\authorA&Task 1&0\%\\
+      &Task 2&20\%\\
+      &Task 3&30\%\\
+      \hline
+\authorB&Task 1&100\%\\
+      &Task 2&40\%\\
+      &Task 3&30\%\\
+      \hline
+\authorC&Task 1&0\%\\
+      &Task 2&40\%\\
+      &Task 3&40\%
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{./imports.tex}
+
+\begin{document}
+
+\frontpage
+
+\begin{task}{1, Setting up the modeling environment}
+We successfully set up the modeling environment, using Python.
+\end{task}
+
+\begin{task}{2, First step of a single pedestrian}
+They stepped successfully (see figure).
+\end{task}
+
+\begin{task}{3, Interaction of pedestrians}
+- not done -
+\end{task}
+\begin{task}{4, Obstacle avoidance}
+Pedestrians can avoid obstacles, using Dijkstras algorithm. See figure.
+\end{task}
+\begin{task}{5, Tests}
+\begin{enumerate}
+\item[TEST1:] RiMEA scenario 1 (straight line, ignore premovement time)\\
+- not done, but citing RiMEA guidelines~\cite{rimea-2009} -
+\item[TEST2:] RiMEA scenario 4 (fundamental diagram, be careful with periodic boundary conditions).\\
+- test successful - 
+\item[TEST3:] RiMEA scenario 6 (movement around a corner).\\
+- test successful - 
+\item[TEST4:] RiMEA scenario\\
+- test successful - 
+\end{enumerate}
+\end{task}
+
+\bibliographystyle{plain}
+\bibliography{Literature}
+
+\end{document}
