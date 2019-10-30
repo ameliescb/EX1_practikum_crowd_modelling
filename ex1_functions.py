@@ -492,15 +492,11 @@ def run_real_time_graphic(n, pedestrian_number, env, grid_size, X, target, pedes
             if timed>np.min(pedestrian_waiting):
                 X,old_X = get_X()
                 for p in range(pedestrian_number):
-                    print("DDDDDDDDDDDDDDD")
                     if pedestrian_waiting[p] < timed:
-                        print("AAAAAAAAAAAAAAA")
                         X = single_step(env, p, X, dist, grid_size)
-                        print(X[p])
                         pedestrian_waiting[p] += 0.4/pedestrian_speed[p]
                     if old_X[p] != X[p] :
-                        print("CCCCCCCCCCCCCCC")
-                        #change the old location to white :
+                        #counts pedesterains who walks throught the measuring points
                         if ((start+10 <= time.perf_counter()) and (time.perf_counter() <= start+70)):
                             if (X[p][0] == 2 and X[p][1] == 225):
                                 m1 += 1
@@ -508,6 +504,7 @@ def run_real_time_graphic(n, pedestrian_number, env, grid_size, X, target, pedes
                                 m2 += 1
                             if (X[p][0] == 1 and X[p][1] == 250):
                                 m3 += 1
+                        #change the old location to white :
                         frame = tk.Frame(grid_frame,  width=pixel, height=pixel) #their units in pixels
                         button1 = tk.Button(frame, bg = "cyan")
                         frame.grid_propagate(False) #disables resizing of frame
@@ -526,7 +523,8 @@ def run_real_time_graphic(n, pedestrian_number, env, grid_size, X, target, pedes
                         button1.grid(sticky="wens") #makes the button expand
                         
                         timing_display.configure(text="       " + str(int((timed-start)*100)/100) + "s")
-                        flow_display.configure(text="m1: " + str(m1) + " m2: " + str(m2) + " m3: " + str(m3))
+                        #displays the amount of people passed from the control points
+                        flow_display.configure(text="Control1: " + str(m1) + " Main: " + str(m2) + " Control2: " + str(m3))
                         button1.update()
                     
         

@@ -93,6 +93,7 @@ env = np.zeros((grid_size[0],grid_size[1]))
 env[2][499] = 3
 target = 2,499
 
+#places randomly pedestrians and assigns the same speed
 X =  [[] for i in range(pedestrian_number)]
 for i in range(pedestrian_number) :
 	h,v  = np.random.randint(grid_size[0]), np.random.randint(grid_size[1])
@@ -104,6 +105,7 @@ duration = 80
 
 run_real_time_graphic(n, pedestrian_number, env, grid_size, X, target, pedestrian_speed, duration, pixel, density)
 
+                                            # Test passed
                                             
                                             
 #%%                                      TEST 3 - Version real time
@@ -152,6 +154,7 @@ env[50][99] = 3
 target = 50,99
 
 # Obstacles
+#creates obstacles so the pedestrians walk in a horizontal line
 for row in range(1,100,2):
     for col in range(99):
         env[row][col] = 2
@@ -161,10 +164,11 @@ X = [[row,0] for row in range(0,100,2)]
 def gaussian(x, mu, sig):
     return np.exp(-np.power(x - mu, 2.) / (2 * np.power(sig, 2.)))
 
+#pedestrian speeds distributed normally
 pedestrian_speed = [0.6+gaussian(i/50+0.7, 1.2, 0.2) for i in range(50)]
-velocity = 0.5
-increase_velocity = 0.03
 
 duration = 15
 
 run_real_time_graphic(n, pedestrian_number, env, grid_size, X, target, pedestrian_speed, duration, pixel=10)
+
+                                            # Test passed
