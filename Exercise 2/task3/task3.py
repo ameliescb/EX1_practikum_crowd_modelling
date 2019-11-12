@@ -38,25 +38,4 @@ def task3():
 	for key in pedos.keys():
 		print(str(key) + "  =  " + str(pedos[key]))
 
-def getPedoLocations():
-
-	pedos = {}
-	#finds the most recently created file and reads it line by line
-	postvis = open(glob.glob('output/straightline_*/postvis.trajectories')[-1], "r")
-	for line in postvis:
-		l_arr = line.split()
-		pedos[l_arr[1]] = [l_arr[2], l_arr[3]]
-
-	return pedos # a dict with key value pedestrian id and value as an array of coordinates [x, y]
-
-def removeSourceField(path_of_scenario_file):
-
-	with open(path_of_scenario_file, 'r') as f:
-	    scenario = json.load(f)
-	scenario['scenario']["topography"]["sources"] = []
-
-	with open('task3_corner.scenario', 'w') as outfile:
-	    json.dump(scenario, outfile, indent=2)
-#task3()
-
-removeSourceField('practikum/Exercise 2/test6_corner/scenarios/straightline.scenario')
+task3()
