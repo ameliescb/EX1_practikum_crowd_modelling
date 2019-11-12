@@ -2,32 +2,61 @@ import json
 import os
 import glob
 
-with open('practikum/Exercise 2/test6_corner/scenarios/straightline.scenario', 'r') as f:
-    scenario = json.load(f)
+def task3():
+	
+	with open('practikum/Exercise 2/test6_corner/scenarios/straightline.scenario', 'r') as f:
+	    scenario = json.load(f)
 
-#reads the dynamic element json to append easily
-with open('pedo.json', 'r') as f:
-    dynamic_element = json.load(f)
+	scenario["scenario"]["attributesSimulation"]["finishTime"] = 300
 
-#set target id
-dynamic_element["targetIds"].append(2)
-dynamic_element["attributes"]["id"] = 0
+	#reads the dynamic element json to append easily
+	with open('pedo.json', 'r') as f:
+	    dynamic_element = json.load(f)
 
-#add pedo
-scenario['scenario']['topography']['dynamicElements'].append(dynamic_element)
+	#set target id
+	dynamic_element["targetIds"].append(2)
+	dynamic_element["attributes"]["id"] = 0
+	dynamic_element["position"]["x"] = 11.5
+	dynamic_element["position"]["y"] = 53.1
 
-with open('task3_corner.scenario', 'w') as outfile:
-    json.dump(scenario, outfile, indent=2)
+	#add pedo
+	scenario['scenario']['topography']['dynamicElements'].append(dynamic_element)
 
-run_scenario = 'java -jar vadere/vadere-console.jar scenario-run --scenario-file "task3_corner.scenario" --output-dir="output"'
-os.system(run_scenario)
+	with open('task3_corner.scenario', 'w') as outfile:
+	    json.dump(scenario, outfile, indent=2)
 
-pedos = {}
-#finds the most recently created file and reads it line by line
-postvis = open(glob.glob('output/straightline_*/postvis.trajectories')[-1], "r")
-for line in postvis:
-	l_arr = line.split()
-	pedos[l_arr[1]] = l_arr[0]
+	run_scenario = 'java -jar vadere/vadere-console.jar scenario-run --scenario-file "task3_corner.scenario" --output-dir="output"'
+	os.system(run_scenario)
 
-for key in pedos.keys():
-	print(str(key) + "  =  " + str(pedos[key]))
+	pedos = {}
+	#finds the most recently created file and reads it line by line
+	postvis = open(glob.glob('output/straightline_*/postvis.trajectories')[-1], "r")
+	for line in postvis:
+		l_arr = line.split()
+		pedos[l_arr[1]] = l_arr[0]
+
+	for key in pedos.keys():
+		print(str(key) + "  =  " + str(pedos[key]))
+
+def getPedoLocations():
+
+	pedos = {}
+	#finds the most recently created file and reads it line by line
+	postvis = open(glob.glob('output/straightline_*/postvis.trajectories')[-1], "r")
+	for line in postvis:
+		l_arr = line.split()
+		pedos[l_arr[1]] = [l_arr[2], l_arr[3]]
+
+	return pedos # a dict with key value pedestrian id and value as an array of coordinates [x, y]
+
+def removeSourceField(path_of_scenario_file):
+
+	with open(path_of_scenario_file, 'r') as f:
+	    scenario = json.load(f)
+	scenario['scenario']["topography"]["sources"] = []
+
+	with open('task3_corner.scenario', 'w') as outfile:
+	    json.dump(scenario, outfile, indent=2)
+#task3()
+
+removeSourceField('practikum/Exercise 2/test6_corner/scenarios/straightline.scenario')
