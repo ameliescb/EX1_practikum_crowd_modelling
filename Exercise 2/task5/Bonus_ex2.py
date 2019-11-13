@@ -61,150 +61,46 @@ def envir_init():
  
 #%%                                        Additional functions
  
-def dt_step(pedestrian_number, dist, env, grid_size, X, target, speed, situation, dt):
+def nested_change(item, func):
+    if isinstance(item, list):
+        return [nested_change(x, func) for x in item]
+    return func(item)
+ 
+def dt_step(pedestrian_number, dist, env, grid_size, X, target, speed, dt):
     
-    X = np.around(X)
-    X.astype(int)
-    X = X.tolist()
+    Y = X.copy()
+    Y = np.around(Y)
+    Y = Y.tolist()
+    Y = nested_change(Y, int)
+    
+    print(Y)
 
     for ped in range(pedestrian_number):
-        situation[ped] += speed[ped]/0.4*dt
-        while situation[ped] > 1:
-            X = single_step(env, ped, X, dist, grid_size)
-            situation[ped] -= 1
-    return X, situation
+        move= speed[ped]/0.4*dt
+        Y = single_step(env, ped, Y, dist, grid_size)
+        norm = np.sqrt((Y[ped][0]-X[ped][0])**2 + (Y[ped][1]-X[ped][1])**2)
+        sum = abs(Y[ped][0]-X[ped][0]) + abs(Y[ped][1]-X[ped][1])
+#        print(X,"\n\n\n",Y)
+        X[ped][0] += (Y[ped][0]-X[ped][0])/norm/sum
+        X[ped][1] += (Y[ped][1]-X[ped][1])/norm/sum
+    return X
 
 
 #%%                                        Simplification for comparison
 
 pedestrian_number, X, n, grid_size, obstacle_number, target, env, speed, dt, dist, situation = envir_init()
 
-#%%                                         Simulation
-    
-master = tk.Tk()
-grid_frame = tk.Frame( master) 
-for i in range(grid_size[0]) : 
-    for j in range(grid_size[1]) : 
+X = dt_step(pedestrian_number, dist, env, grid_size, X, target, speed, dt)
+print("yes")
+X = dt_step(pedestrian_number, dist, env, grid_size, X, target, speed, dt)
+X = dt_step(pedestrian_number, dist, env, grid_size, X, target, speed, dt)
+X = dt_step(pedestrian_number, dist, env, grid_size, X, target, speed, dt)
 
-        if env[i][j] == 3 : #target
+X = dt_step(pedestrian_number, dist, env, grid_size, X, target, speed, dt)
 
-            frame = tk.Frame(grid_frame,  width=15, height=15) #their units in pixels
-            button1 = tk.Button(frame, bg = "red")
-            frame.grid_propagate(False) #disables resizing of frame
-            frame.columnconfigure(0, weight=1) #enables button to fill frame
-            frame.rowconfigure(0,weight=1) #any positive number would do the trick
-            frame.grid(row=i, column=j) #put frame where the button should be
-            button1.grid(sticky="wens") #makes the button expand
-
-        elif env[i][j] == 2 : 
-            frame = tk.Frame(grid_frame, width=15, height=15) #their units in pixels
-            button1 = tk.Button(frame, bg = "black")
-            frame.grid_propagate(False) #disables resizing of frame
-            frame.columnconfigure(0, weight=1) #enables button to fill frame
-            frame.rowconfigure(0,weight=1) #any positive number would do the trick
-            frame.grid(row=i, column=j) #put frame where the button should be
-            button1.grid(sticky="wens") #makes the button expand
-            
-        else : 
-            frame = tk.Frame(grid_frame,  width=15, height=15) #their units in pixels
-            button1 = tk.Button(frame, bg = "white")
-            frame.grid_propagate(False) #disables resizing of frame
-            frame.columnconfigure(0, weight=1) #enables button to fill frame
-            frame.rowconfigure(0,weight=1) #any positive number would do the trick
-            frame.grid(row=i, column=j) #put frame where the button should be
-            button1.grid(sticky="wens") #makes the button expand
-        
-        
-#####################    PEDESTRIANS
-for l in range(pedestrian_number) : 
-    i,j = X[l]
-    frame = tk.Frame(grid_frame, width=15, height=15) #their units in pixels
-    button2 = tk.Button(frame, bg = "blue")
-    frame.grid_propagate(False) #disables resizing of frame
-    frame.columnconfigure(0, weight=1) #enables button to fill frame
-    frame.rowconfigure(0,weight=1) #any positive number would do the trick
-    frame.grid(row=i, column=j) #put frame where the button should be
-    button2.grid(sticky="wens") #makes the button expand
-
-grid_frame.pack(side=LEFT)
-
-
-########################### MOVING PEDESTRIANS ############################
+X = dt_step(pedestrian_number, dist, env, grid_size, X, target, speed, dt)
 
 
 
-button = tk.Button(master, text = "Simulate one step ")
-button.pack(side=RIGHT)
+print(X, "\n\n\n\n\n\n\n\n")
 
-def get_X() : 
-    return X, X.copy()
-
-
-def get_situation() :
-    return situation
-
-def get_time() : 
-    
-    return time
-
-def update_time() : 
-    global time
-    time += 1
-    return time
-  
-
-def leftclick(event):
-        
-    X,old_X = get_X()
-    situation = get_situation()
-    X, situation = dt_step(pedestrian_number, dist, env, grid_size, X, target, speed, situation, dt) 
-
-    
-    for p in range(pedestrian_number) :
-        if old_X[p] != X[p] : 
-            #change the old location to white : 
-            frame = tk.Frame(grid_frame,  width=15, height=15) #their units in pixels
-            button1 = tk.Button(frame, bg = "white")
-            frame.grid_propagate(False) #disables resizing of frame
-            frame.columnconfigure(0, weight=1) #enables button to fill frame
-            frame.rowconfigure(0,weight=1) #any positive number would do the trick
-            frame.grid(row=old_X[p][0], column=old_X[p][1]) #put frame where the button should be
-            button1.grid(sticky="wens") #makes the button expand
-            
-            #put the new location to blue :
-            frame = tk.Frame(grid_frame,  width=15, height=15) #their units in pixels
-            button1 = tk.Button(frame, bg = "blue")
-            frame.grid_propagate(False) #disables resizing of frame
-            frame.columnconfigure(0, weight=1) #enables button to fill frame
-            frame.rowconfigure(0,weight=1) #any positive number would do the trick
-            frame.grid(row=X[p][0], column=X[p][1]) #put frame where the button should be
-            button1.grid(sticky="wens") #makes the button expand    
-    
-    
-button.bind("<Button-1>", leftclick)
-button.pack(side=RIGHT)
-
-
-
-tk.mainloop()
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
