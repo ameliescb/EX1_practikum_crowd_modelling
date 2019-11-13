@@ -1,0 +1,1364 @@
+{
+  "name" : "task5",
+  "description" : "",
+  "release" : "1.0",
+  "commithash" : "8c70caee933026d48c0d8e0f1dc23bcb2ed66a4c",
+  "processWriters" : {
+    "files" : [ {
+      "type" : "org.vadere.simulator.projects.dataprocessing.outputfile.TimestepPedestrianIdOutputFile",
+      "filename" : "postvis.trajectories",
+      "processors" : [ 1, 2 ]
+    }, {
+      "type" : "org.vadere.simulator.projects.dataprocessing.outputfile.TimestepPedestrianIdOverlapOutputFile",
+      "filename" : "overlaps.csv",
+      "processors" : [ 3 ]
+    }, {
+      "type" : "org.vadere.simulator.projects.dataprocessing.outputfile.NoDataKeyOutputFile",
+      "filename" : "overlapCount.txt",
+      "processors" : [ 4 ]
+    } ],
+    "processors" : [ {
+      "type" : "org.vadere.simulator.projects.dataprocessing.processor.PedestrianPositionProcessor",
+      "id" : 1
+    }, {
+      "type" : "org.vadere.simulator.projects.dataprocessing.processor.PedestrianTargetIdProcessor",
+      "id" : 2
+    }, {
+      "type" : "org.vadere.simulator.projects.dataprocessing.processor.PedestrianOverlapProcessor",
+      "id" : 3
+    }, {
+      "type" : "org.vadere.simulator.projects.dataprocessing.processor.NumberOverlapsProcessor",
+      "id" : 4,
+      "attributesType" : "org.vadere.state.attributes.processor.AttributesNumberOverlapsProcessor",
+      "attributes" : {
+        "pedestrianOverlapProcessorId" : 3
+      }
+    } ],
+    "isTimestamped" : true,
+    "isWriteMetaData" : false
+  },
+  "scenario" : {
+    "mainModel" : "org.vadere.simulator.models.gnm.GradientNavigationModel",
+    "attributesModel" : {
+      "org.vadere.state.attributes.models.AttributesGNM" : {
+        "attributesODEIntegrator" : {
+          "solverType" : "DORMAND_PRINCE_45",
+          "stepSizeMin" : 1.0E-4,
+          "stepSizeMax" : 1.0,
+          "toleranceAbsolute" : 1.0E-5,
+          "toleranceRelative" : 1.0E-4
+        },
+        "floorGradientProviderType" : "FLOOR_EIKONAL_DISCRETE",
+        "targetPotentialModel" : "org.vadere.simulator.models.potential.fields.PotentialFieldTargetGrid",
+        "pedestrianPotentialModel" : "org.vadere.simulator.models.gnm.PotentialFieldPedestrianGNM",
+        "obstaclePotentialModel" : "org.vadere.simulator.models.gnm.PotentialFieldObstacleGNM"
+      },
+      "org.vadere.state.attributes.models.AttributesPotentialGNM" : {
+        "pedestrianBodyPotential" : 2.72,
+        "pedestrianRecognitionDistance" : 0.8,
+        "obstacleBodyPotential" : 20.1,
+        "obstacleRepulsionStrength" : 0.25
+      },
+      "org.vadere.state.attributes.models.AttributesFloorField" : {
+        "createMethod" : "HIGH_ACCURACY_FAST_MARCHING",
+        "potentialFieldResolution" : 0.1,
+        "obstacleGridPenalty" : 0.1,
+        "targetAttractionStrength" : 1.0,
+        "timeCostAttributes" : {
+          "standardDeviation" : 0.7,
+          "type" : "UNIT",
+          "obstacleDensityWeight" : 3.5,
+          "pedestrianSameTargetDensityWeight" : 3.5,
+          "pedestrianOtherTargetDensityWeight" : 3.5,
+          "pedestrianWeight" : 3.5,
+          "queueWidthLoading" : 1.0,
+          "pedestrianDynamicWeight" : 6.0,
+          "loadingType" : "CONSTANT",
+          "width" : 0.2,
+          "height" : 1.0
+        }
+      }
+    },
+    "attributesSimulation" : {
+      "finishTime" : 1.0,
+      "simTimeStepLength" : 0.4,
+      "realTimeSimTimeRatio" : 0.1,
+      "writeSimulationData" : true,
+      "visualizationEnabled" : true,
+      "printFPS" : false,
+      "digitsPerCoordinate" : 2,
+      "useFixedSeed" : true,
+      "fixedSeed" : -7603193638816494904,
+      "simulationSeed" : -7603193638816494904,
+      "useSalientBehavior" : false
+    },
+    "topography" : {
+      "attributes" : {
+        "bounds" : {
+          "x" : 0.0,
+          "y" : 0.0,
+          "width" : 28.0,
+          "height" : 19.0
+        },
+        "boundingBoxWidth" : 0.5,
+        "bounded" : true
+      },
+      "obstacles" : [ {
+        "shape" : {
+          "x" : 53.1,
+          "y" : 86.7,
+          "width" : 0.8,
+          "height" : 1.9,
+          "type" : "RECTANGLE"
+        },
+        "id" : -1
+      }, {
+        "shape" : {
+          "x" : 14.5,
+          "y" : 10.1,
+          "width" : 1.0,
+          "height" : 8.4,
+          "type" : "RECTANGLE"
+        },
+        "id" : -1
+      }, {
+        "shape" : {
+          "x" : 14.5,
+          "y" : 0.5,
+          "width" : 1.0,
+          "height" : 8.9,
+          "type" : "RECTANGLE"
+        },
+        "id" : -1
+      } ],
+      "measurementAreas" : [ ],
+      "stairs" : [ ],
+      "targets" : [ {
+        "id" : 2,
+        "absorbing" : true,
+        "shape" : {
+          "x" : 25.0,
+          "y" : 8.0,
+          "width" : 2.0,
+          "height" : 4.0,
+          "type" : "RECTANGLE"
+        },
+        "waitingTime" : 0.0,
+        "waitingTimeYellowPhase" : 0.0,
+        "parallelWaiters" : 0,
+        "individualWaiting" : true,
+        "deletionDistance" : 0.1,
+        "startingWithRedLight" : false,
+        "nextSpeed" : -1.0
+      } ],
+      "absorbingAreas" : [ ],
+      "sources" : [ ],
+      "dynamicElements" : [ {
+        "source" : null,
+        "targetIds" : [ 2 ],
+        "position" : {
+          "x" : 7.211365756901667,
+          "y" : 11.419725856126002
+        },
+        "velocity" : {
+          "x" : 0.0,
+          "y" : 0.0
+        },
+        "nextTargetListIndex" : 0,
+        "freeFlowSpeed" : 1.6804382036458225,
+        "attributes" : {
+          "id" : 1,
+          "radius" : 0.2,
+          "densityDependentSpeed" : false,
+          "speedDistributionMean" : 1.34,
+          "speedDistributionStandardDeviation" : 0.26,
+          "minimumSpeed" : 0.5,
+          "maximumSpeed" : 2.2,
+          "acceleration" : 2.0,
+          "footStepsToStore" : 4,
+          "searchRadius" : 1.0,
+          "angleCalculationType" : "USE_CENTER",
+          "targetOrientationAngleThreshold" : 45.0
+        },
+        "idAsTarget" : -1,
+        "isChild" : false,
+        "isLikelyInjured" : false,
+        "mostImportantEvent" : null,
+        "salientBehavior" : "TARGET_ORIENTED",
+        "groupIds" : [ ],
+        "trajectory" : {
+          "footSteps" : [ ]
+        },
+        "groupSizes" : [ ],
+        "modelPedestrianMap" : { },
+        "type" : "PEDESTRIAN"
+      }, {
+        "source" : null,
+        "targetIds" : [ 2 ],
+        "position" : {
+          "x" : 8.009048034137274,
+          "y" : 9.915566432142107
+        },
+        "velocity" : {
+          "x" : 0.0,
+          "y" : 0.0
+        },
+        "nextTargetListIndex" : 0,
+        "freeFlowSpeed" : 1.6804382036458225,
+        "attributes" : {
+          "id" : 2,
+          "radius" : 0.2,
+          "densityDependentSpeed" : false,
+          "speedDistributionMean" : 1.34,
+          "speedDistributionStandardDeviation" : 0.26,
+          "minimumSpeed" : 0.5,
+          "maximumSpeed" : 2.2,
+          "acceleration" : 2.0,
+          "footStepsToStore" : 4,
+          "searchRadius" : 1.0,
+          "angleCalculationType" : "USE_CENTER",
+          "targetOrientationAngleThreshold" : 45.0
+        },
+        "idAsTarget" : -1,
+        "isChild" : false,
+        "isLikelyInjured" : false,
+        "mostImportantEvent" : null,
+        "salientBehavior" : "TARGET_ORIENTED",
+        "groupIds" : [ ],
+        "trajectory" : {
+          "footSteps" : [ ]
+        },
+        "groupSizes" : [ ],
+        "modelPedestrianMap" : { },
+        "type" : "PEDESTRIAN"
+      }, {
+        "source" : null,
+        "targetIds" : [ 2 ],
+        "position" : {
+          "x" : 6.229830632826824,
+          "y" : 9.82233485332794
+        },
+        "velocity" : {
+          "x" : 0.0,
+          "y" : 0.0
+        },
+        "nextTargetListIndex" : 0,
+        "freeFlowSpeed" : 1.6804382036458225,
+        "attributes" : {
+          "id" : 3,
+          "radius" : 0.2,
+          "densityDependentSpeed" : false,
+          "speedDistributionMean" : 1.34,
+          "speedDistributionStandardDeviation" : 0.26,
+          "minimumSpeed" : 0.5,
+          "maximumSpeed" : 2.2,
+          "acceleration" : 2.0,
+          "footStepsToStore" : 4,
+          "searchRadius" : 1.0,
+          "angleCalculationType" : "USE_CENTER",
+          "targetOrientationAngleThreshold" : 45.0
+        },
+        "idAsTarget" : -1,
+        "isChild" : false,
+        "isLikelyInjured" : false,
+        "mostImportantEvent" : null,
+        "salientBehavior" : "TARGET_ORIENTED",
+        "groupIds" : [ ],
+        "trajectory" : {
+          "footSteps" : [ ]
+        },
+        "groupSizes" : [ ],
+        "modelPedestrianMap" : { },
+        "type" : "PEDESTRIAN"
+      }, {
+        "source" : null,
+        "targetIds" : [ 2 ],
+        "position" : {
+          "x" : 5.290582113633764,
+          "y" : 9.005924727021572
+        },
+        "velocity" : {
+          "x" : 0.0,
+          "y" : 0.0
+        },
+        "nextTargetListIndex" : 0,
+        "freeFlowSpeed" : 1.6804382036458225,
+        "attributes" : {
+          "id" : 4,
+          "radius" : 0.2,
+          "densityDependentSpeed" : false,
+          "speedDistributionMean" : 1.34,
+          "speedDistributionStandardDeviation" : 0.26,
+          "minimumSpeed" : 0.5,
+          "maximumSpeed" : 2.2,
+          "acceleration" : 2.0,
+          "footStepsToStore" : 4,
+          "searchRadius" : 1.0,
+          "angleCalculationType" : "USE_CENTER",
+          "targetOrientationAngleThreshold" : 45.0
+        },
+        "idAsTarget" : -1,
+        "isChild" : false,
+        "isLikelyInjured" : false,
+        "mostImportantEvent" : null,
+        "salientBehavior" : "TARGET_ORIENTED",
+        "groupIds" : [ ],
+        "trajectory" : {
+          "footSteps" : [ ]
+        },
+        "groupSizes" : [ ],
+        "modelPedestrianMap" : { },
+        "type" : "PEDESTRIAN"
+      }, {
+        "source" : null,
+        "targetIds" : [ 2 ],
+        "position" : {
+          "x" : 5.359508234201873,
+          "y" : 10.722828389498222
+        },
+        "velocity" : {
+          "x" : 0.0,
+          "y" : 0.0
+        },
+        "nextTargetListIndex" : 0,
+        "freeFlowSpeed" : 1.6804382036458225,
+        "attributes" : {
+          "id" : 5,
+          "radius" : 0.2,
+          "densityDependentSpeed" : false,
+          "speedDistributionMean" : 1.34,
+          "speedDistributionStandardDeviation" : 0.26,
+          "minimumSpeed" : 0.5,
+          "maximumSpeed" : 2.2,
+          "acceleration" : 2.0,
+          "footStepsToStore" : 4,
+          "searchRadius" : 1.0,
+          "angleCalculationType" : "USE_CENTER",
+          "targetOrientationAngleThreshold" : 45.0
+        },
+        "idAsTarget" : -1,
+        "isChild" : false,
+        "isLikelyInjured" : false,
+        "mostImportantEvent" : null,
+        "salientBehavior" : "TARGET_ORIENTED",
+        "groupIds" : [ ],
+        "trajectory" : {
+          "footSteps" : [ ]
+        },
+        "groupSizes" : [ ],
+        "modelPedestrianMap" : { },
+        "type" : "PEDESTRIAN"
+      }, {
+        "source" : null,
+        "targetIds" : [ 2 ],
+        "position" : {
+          "x" : 7.920576593150983,
+          "y" : 11.154441331237042
+        },
+        "velocity" : {
+          "x" : 0.0,
+          "y" : 0.0
+        },
+        "nextTargetListIndex" : 0,
+        "freeFlowSpeed" : 1.6804382036458225,
+        "attributes" : {
+          "id" : 6,
+          "radius" : 0.2,
+          "densityDependentSpeed" : false,
+          "speedDistributionMean" : 1.34,
+          "speedDistributionStandardDeviation" : 0.26,
+          "minimumSpeed" : 0.5,
+          "maximumSpeed" : 2.2,
+          "acceleration" : 2.0,
+          "footStepsToStore" : 4,
+          "searchRadius" : 1.0,
+          "angleCalculationType" : "USE_CENTER",
+          "targetOrientationAngleThreshold" : 45.0
+        },
+        "idAsTarget" : -1,
+        "isChild" : false,
+        "isLikelyInjured" : false,
+        "mostImportantEvent" : null,
+        "salientBehavior" : "TARGET_ORIENTED",
+        "groupIds" : [ ],
+        "trajectory" : {
+          "footSteps" : [ ]
+        },
+        "groupSizes" : [ ],
+        "modelPedestrianMap" : { },
+        "type" : "PEDESTRIAN"
+      }, {
+        "source" : null,
+        "targetIds" : [ 2 ],
+        "position" : {
+          "x" : 6.783553544645134,
+          "y" : 8.64427260810156
+        },
+        "velocity" : {
+          "x" : 0.0,
+          "y" : 0.0
+        },
+        "nextTargetListIndex" : 0,
+        "freeFlowSpeed" : 1.6804382036458225,
+        "attributes" : {
+          "id" : 7,
+          "radius" : 0.2,
+          "densityDependentSpeed" : false,
+          "speedDistributionMean" : 1.34,
+          "speedDistributionStandardDeviation" : 0.26,
+          "minimumSpeed" : 0.5,
+          "maximumSpeed" : 2.2,
+          "acceleration" : 2.0,
+          "footStepsToStore" : 4,
+          "searchRadius" : 1.0,
+          "angleCalculationType" : "USE_CENTER",
+          "targetOrientationAngleThreshold" : 45.0
+        },
+        "idAsTarget" : -1,
+        "isChild" : false,
+        "isLikelyInjured" : false,
+        "mostImportantEvent" : null,
+        "salientBehavior" : "TARGET_ORIENTED",
+        "groupIds" : [ ],
+        "trajectory" : {
+          "footSteps" : [ ]
+        },
+        "groupSizes" : [ ],
+        "modelPedestrianMap" : { },
+        "type" : "PEDESTRIAN"
+      }, {
+        "source" : null,
+        "targetIds" : [ 2 ],
+        "position" : {
+          "x" : 7.319828568506785,
+          "y" : 10.802953717482044
+        },
+        "velocity" : {
+          "x" : 0.0,
+          "y" : 0.0
+        },
+        "nextTargetListIndex" : 0,
+        "freeFlowSpeed" : 1.6804382036458225,
+        "attributes" : {
+          "id" : 8,
+          "radius" : 0.2,
+          "densityDependentSpeed" : false,
+          "speedDistributionMean" : 1.34,
+          "speedDistributionStandardDeviation" : 0.26,
+          "minimumSpeed" : 0.5,
+          "maximumSpeed" : 2.2,
+          "acceleration" : 2.0,
+          "footStepsToStore" : 4,
+          "searchRadius" : 1.0,
+          "angleCalculationType" : "USE_CENTER",
+          "targetOrientationAngleThreshold" : 45.0
+        },
+        "idAsTarget" : -1,
+        "isChild" : false,
+        "isLikelyInjured" : false,
+        "mostImportantEvent" : null,
+        "salientBehavior" : "TARGET_ORIENTED",
+        "groupIds" : [ ],
+        "trajectory" : {
+          "footSteps" : [ ]
+        },
+        "groupSizes" : [ ],
+        "modelPedestrianMap" : { },
+        "type" : "PEDESTRIAN"
+      }, {
+        "source" : null,
+        "targetIds" : [ 2 ],
+        "position" : {
+          "x" : 6.623571113624007,
+          "y" : 10.889961853539225
+        },
+        "velocity" : {
+          "x" : 0.0,
+          "y" : 0.0
+        },
+        "nextTargetListIndex" : 0,
+        "freeFlowSpeed" : 1.6804382036458225,
+        "attributes" : {
+          "id" : 9,
+          "radius" : 0.2,
+          "densityDependentSpeed" : false,
+          "speedDistributionMean" : 1.34,
+          "speedDistributionStandardDeviation" : 0.26,
+          "minimumSpeed" : 0.5,
+          "maximumSpeed" : 2.2,
+          "acceleration" : 2.0,
+          "footStepsToStore" : 4,
+          "searchRadius" : 1.0,
+          "angleCalculationType" : "USE_CENTER",
+          "targetOrientationAngleThreshold" : 45.0
+        },
+        "idAsTarget" : -1,
+        "isChild" : false,
+        "isLikelyInjured" : false,
+        "mostImportantEvent" : null,
+        "salientBehavior" : "TARGET_ORIENTED",
+        "groupIds" : [ ],
+        "trajectory" : {
+          "footSteps" : [ ]
+        },
+        "groupSizes" : [ ],
+        "modelPedestrianMap" : { },
+        "type" : "PEDESTRIAN"
+      }, {
+        "source" : null,
+        "targetIds" : [ 2 ],
+        "position" : {
+          "x" : 7.239219185992272,
+          "y" : 9.640147011449525
+        },
+        "velocity" : {
+          "x" : 0.0,
+          "y" : 0.0
+        },
+        "nextTargetListIndex" : 0,
+        "freeFlowSpeed" : 1.6804382036458225,
+        "attributes" : {
+          "id" : 10,
+          "radius" : 0.2,
+          "densityDependentSpeed" : false,
+          "speedDistributionMean" : 1.34,
+          "speedDistributionStandardDeviation" : 0.26,
+          "minimumSpeed" : 0.5,
+          "maximumSpeed" : 2.2,
+          "acceleration" : 2.0,
+          "footStepsToStore" : 4,
+          "searchRadius" : 1.0,
+          "angleCalculationType" : "USE_CENTER",
+          "targetOrientationAngleThreshold" : 45.0
+        },
+        "idAsTarget" : -1,
+        "isChild" : false,
+        "isLikelyInjured" : false,
+        "mostImportantEvent" : null,
+        "salientBehavior" : "TARGET_ORIENTED",
+        "groupIds" : [ ],
+        "trajectory" : {
+          "footSteps" : [ ]
+        },
+        "groupSizes" : [ ],
+        "modelPedestrianMap" : { },
+        "type" : "PEDESTRIAN"
+      }, {
+        "source" : null,
+        "targetIds" : [ 2 ],
+        "position" : {
+          "x" : 7.482422267216641,
+          "y" : 8.451135730741232
+        },
+        "velocity" : {
+          "x" : 0.0,
+          "y" : 0.0
+        },
+        "nextTargetListIndex" : 0,
+        "freeFlowSpeed" : 1.6804382036458225,
+        "attributes" : {
+          "id" : 11,
+          "radius" : 0.2,
+          "densityDependentSpeed" : false,
+          "speedDistributionMean" : 1.34,
+          "speedDistributionStandardDeviation" : 0.26,
+          "minimumSpeed" : 0.5,
+          "maximumSpeed" : 2.2,
+          "acceleration" : 2.0,
+          "footStepsToStore" : 4,
+          "searchRadius" : 1.0,
+          "angleCalculationType" : "USE_CENTER",
+          "targetOrientationAngleThreshold" : 45.0
+        },
+        "idAsTarget" : -1,
+        "isChild" : false,
+        "isLikelyInjured" : false,
+        "mostImportantEvent" : null,
+        "salientBehavior" : "TARGET_ORIENTED",
+        "groupIds" : [ ],
+        "trajectory" : {
+          "footSteps" : [ ]
+        },
+        "groupSizes" : [ ],
+        "modelPedestrianMap" : { },
+        "type" : "PEDESTRIAN"
+      }, {
+        "source" : null,
+        "targetIds" : [ 2 ],
+        "position" : {
+          "x" : 5.859570803052787,
+          "y" : 9.311147516051399
+        },
+        "velocity" : {
+          "x" : 0.0,
+          "y" : 0.0
+        },
+        "nextTargetListIndex" : 0,
+        "freeFlowSpeed" : 1.6804382036458225,
+        "attributes" : {
+          "id" : 12,
+          "radius" : 0.2,
+          "densityDependentSpeed" : false,
+          "speedDistributionMean" : 1.34,
+          "speedDistributionStandardDeviation" : 0.26,
+          "minimumSpeed" : 0.5,
+          "maximumSpeed" : 2.2,
+          "acceleration" : 2.0,
+          "footStepsToStore" : 4,
+          "searchRadius" : 1.0,
+          "angleCalculationType" : "USE_CENTER",
+          "targetOrientationAngleThreshold" : 45.0
+        },
+        "idAsTarget" : -1,
+        "isChild" : false,
+        "isLikelyInjured" : false,
+        "mostImportantEvent" : null,
+        "salientBehavior" : "TARGET_ORIENTED",
+        "groupIds" : [ ],
+        "trajectory" : {
+          "footSteps" : [ ]
+        },
+        "groupSizes" : [ ],
+        "modelPedestrianMap" : { },
+        "type" : "PEDESTRIAN"
+      }, {
+        "source" : null,
+        "targetIds" : [ 2 ],
+        "position" : {
+          "x" : 4.605607989941249,
+          "y" : 9.060317460632866
+        },
+        "velocity" : {
+          "x" : 0.0,
+          "y" : 0.0
+        },
+        "nextTargetListIndex" : 0,
+        "freeFlowSpeed" : 1.6804382036458225,
+        "attributes" : {
+          "id" : 13,
+          "radius" : 0.2,
+          "densityDependentSpeed" : false,
+          "speedDistributionMean" : 1.34,
+          "speedDistributionStandardDeviation" : 0.26,
+          "minimumSpeed" : 0.5,
+          "maximumSpeed" : 2.2,
+          "acceleration" : 2.0,
+          "footStepsToStore" : 4,
+          "searchRadius" : 1.0,
+          "angleCalculationType" : "USE_CENTER",
+          "targetOrientationAngleThreshold" : 45.0
+        },
+        "idAsTarget" : -1,
+        "isChild" : false,
+        "isLikelyInjured" : false,
+        "mostImportantEvent" : null,
+        "salientBehavior" : "TARGET_ORIENTED",
+        "groupIds" : [ ],
+        "trajectory" : {
+          "footSteps" : [ ]
+        },
+        "groupSizes" : [ ],
+        "modelPedestrianMap" : { },
+        "type" : "PEDESTRIAN"
+      }, {
+        "source" : null,
+        "targetIds" : [ 2 ],
+        "position" : {
+          "x" : 5.938392618042042,
+          "y" : 11.09859256721824
+        },
+        "velocity" : {
+          "x" : 0.0,
+          "y" : 0.0
+        },
+        "nextTargetListIndex" : 0,
+        "freeFlowSpeed" : 1.6804382036458225,
+        "attributes" : {
+          "id" : 14,
+          "radius" : 0.2,
+          "densityDependentSpeed" : false,
+          "speedDistributionMean" : 1.34,
+          "speedDistributionStandardDeviation" : 0.26,
+          "minimumSpeed" : 0.5,
+          "maximumSpeed" : 2.2,
+          "acceleration" : 2.0,
+          "footStepsToStore" : 4,
+          "searchRadius" : 1.0,
+          "angleCalculationType" : "USE_CENTER",
+          "targetOrientationAngleThreshold" : 45.0
+        },
+        "idAsTarget" : -1,
+        "isChild" : false,
+        "isLikelyInjured" : false,
+        "mostImportantEvent" : null,
+        "salientBehavior" : "TARGET_ORIENTED",
+        "groupIds" : [ ],
+        "trajectory" : {
+          "footSteps" : [ ]
+        },
+        "groupSizes" : [ ],
+        "modelPedestrianMap" : { },
+        "type" : "PEDESTRIAN"
+      }, {
+        "source" : null,
+        "targetIds" : [ 2 ],
+        "position" : {
+          "x" : 5.012994870117471,
+          "y" : 9.587861287255357
+        },
+        "velocity" : {
+          "x" : 0.0,
+          "y" : 0.0
+        },
+        "nextTargetListIndex" : 0,
+        "freeFlowSpeed" : 1.6804382036458225,
+        "attributes" : {
+          "id" : 15,
+          "radius" : 0.2,
+          "densityDependentSpeed" : false,
+          "speedDistributionMean" : 1.34,
+          "speedDistributionStandardDeviation" : 0.26,
+          "minimumSpeed" : 0.5,
+          "maximumSpeed" : 2.2,
+          "acceleration" : 2.0,
+          "footStepsToStore" : 4,
+          "searchRadius" : 1.0,
+          "angleCalculationType" : "USE_CENTER",
+          "targetOrientationAngleThreshold" : 45.0
+        },
+        "idAsTarget" : -1,
+        "isChild" : false,
+        "isLikelyInjured" : false,
+        "mostImportantEvent" : null,
+        "salientBehavior" : "TARGET_ORIENTED",
+        "groupIds" : [ ],
+        "trajectory" : {
+          "footSteps" : [ ]
+        },
+        "groupSizes" : [ ],
+        "modelPedestrianMap" : { },
+        "type" : "PEDESTRIAN"
+      }, {
+        "source" : null,
+        "targetIds" : [ 2 ],
+        "position" : {
+          "x" : 6.058002874707569,
+          "y" : 10.4569199724923
+        },
+        "velocity" : {
+          "x" : 0.0,
+          "y" : 0.0
+        },
+        "nextTargetListIndex" : 0,
+        "freeFlowSpeed" : 1.6804382036458225,
+        "attributes" : {
+          "id" : 16,
+          "radius" : 0.2,
+          "densityDependentSpeed" : false,
+          "speedDistributionMean" : 1.34,
+          "speedDistributionStandardDeviation" : 0.26,
+          "minimumSpeed" : 0.5,
+          "maximumSpeed" : 2.2,
+          "acceleration" : 2.0,
+          "footStepsToStore" : 4,
+          "searchRadius" : 1.0,
+          "angleCalculationType" : "USE_CENTER",
+          "targetOrientationAngleThreshold" : 45.0
+        },
+        "idAsTarget" : -1,
+        "isChild" : false,
+        "isLikelyInjured" : false,
+        "mostImportantEvent" : null,
+        "salientBehavior" : "TARGET_ORIENTED",
+        "groupIds" : [ ],
+        "trajectory" : {
+          "footSteps" : [ ]
+        },
+        "groupSizes" : [ ],
+        "modelPedestrianMap" : { },
+        "type" : "PEDESTRIAN"
+      }, {
+        "source" : null,
+        "targetIds" : [ 2 ],
+        "position" : {
+          "x" : 8.0856035163998,
+          "y" : 9.296980006904198
+        },
+        "velocity" : {
+          "x" : 0.0,
+          "y" : 0.0
+        },
+        "nextTargetListIndex" : 0,
+        "freeFlowSpeed" : 1.6804382036458225,
+        "attributes" : {
+          "id" : 17,
+          "radius" : 0.2,
+          "densityDependentSpeed" : false,
+          "speedDistributionMean" : 1.34,
+          "speedDistributionStandardDeviation" : 0.26,
+          "minimumSpeed" : 0.5,
+          "maximumSpeed" : 2.2,
+          "acceleration" : 2.0,
+          "footStepsToStore" : 4,
+          "searchRadius" : 1.0,
+          "angleCalculationType" : "USE_CENTER",
+          "targetOrientationAngleThreshold" : 45.0
+        },
+        "idAsTarget" : -1,
+        "isChild" : false,
+        "isLikelyInjured" : false,
+        "mostImportantEvent" : null,
+        "salientBehavior" : "TARGET_ORIENTED",
+        "groupIds" : [ ],
+        "trajectory" : {
+          "footSteps" : [ ]
+        },
+        "groupSizes" : [ ],
+        "modelPedestrianMap" : { },
+        "type" : "PEDESTRIAN"
+      }, {
+        "source" : null,
+        "targetIds" : [ 2 ],
+        "position" : {
+          "x" : 8.146870852743794,
+          "y" : 8.656866432008728
+        },
+        "velocity" : {
+          "x" : 0.0,
+          "y" : 0.0
+        },
+        "nextTargetListIndex" : 0,
+        "freeFlowSpeed" : 1.6804382036458225,
+        "attributes" : {
+          "id" : 18,
+          "radius" : 0.2,
+          "densityDependentSpeed" : false,
+          "speedDistributionMean" : 1.34,
+          "speedDistributionStandardDeviation" : 0.26,
+          "minimumSpeed" : 0.5,
+          "maximumSpeed" : 2.2,
+          "acceleration" : 2.0,
+          "footStepsToStore" : 4,
+          "searchRadius" : 1.0,
+          "angleCalculationType" : "USE_CENTER",
+          "targetOrientationAngleThreshold" : 45.0
+        },
+        "idAsTarget" : -1,
+        "isChild" : false,
+        "isLikelyInjured" : false,
+        "mostImportantEvent" : null,
+        "salientBehavior" : "TARGET_ORIENTED",
+        "groupIds" : [ ],
+        "trajectory" : {
+          "footSteps" : [ ]
+        },
+        "groupSizes" : [ ],
+        "modelPedestrianMap" : { },
+        "type" : "PEDESTRIAN"
+      }, {
+        "source" : null,
+        "targetIds" : [ 2 ],
+        "position" : {
+          "x" : 6.502521585932016,
+          "y" : 11.526580566437481
+        },
+        "velocity" : {
+          "x" : 0.0,
+          "y" : 0.0
+        },
+        "nextTargetListIndex" : 0,
+        "freeFlowSpeed" : 1.6804382036458225,
+        "attributes" : {
+          "id" : 19,
+          "radius" : 0.2,
+          "densityDependentSpeed" : false,
+          "speedDistributionMean" : 1.34,
+          "speedDistributionStandardDeviation" : 0.26,
+          "minimumSpeed" : 0.5,
+          "maximumSpeed" : 2.2,
+          "acceleration" : 2.0,
+          "footStepsToStore" : 4,
+          "searchRadius" : 1.0,
+          "angleCalculationType" : "USE_CENTER",
+          "targetOrientationAngleThreshold" : 45.0
+        },
+        "idAsTarget" : -1,
+        "isChild" : false,
+        "isLikelyInjured" : false,
+        "mostImportantEvent" : null,
+        "salientBehavior" : "TARGET_ORIENTED",
+        "groupIds" : [ ],
+        "trajectory" : {
+          "footSteps" : [ ]
+        },
+        "groupSizes" : [ ],
+        "modelPedestrianMap" : { },
+        "type" : "PEDESTRIAN"
+      }, {
+        "source" : null,
+        "targetIds" : [ 2 ],
+        "position" : {
+          "x" : 6.722494988059045,
+          "y" : 10.244878567905394
+        },
+        "velocity" : {
+          "x" : 0.0,
+          "y" : 0.0
+        },
+        "nextTargetListIndex" : 0,
+        "freeFlowSpeed" : 1.6804382036458225,
+        "attributes" : {
+          "id" : 20,
+          "radius" : 0.2,
+          "densityDependentSpeed" : false,
+          "speedDistributionMean" : 1.34,
+          "speedDistributionStandardDeviation" : 0.26,
+          "minimumSpeed" : 0.5,
+          "maximumSpeed" : 2.2,
+          "acceleration" : 2.0,
+          "footStepsToStore" : 4,
+          "searchRadius" : 1.0,
+          "angleCalculationType" : "USE_CENTER",
+          "targetOrientationAngleThreshold" : 45.0
+        },
+        "idAsTarget" : -1,
+        "isChild" : false,
+        "isLikelyInjured" : false,
+        "mostImportantEvent" : null,
+        "salientBehavior" : "TARGET_ORIENTED",
+        "groupIds" : [ ],
+        "trajectory" : {
+          "footSteps" : [ ]
+        },
+        "groupSizes" : [ ],
+        "modelPedestrianMap" : { },
+        "type" : "PEDESTRIAN"
+      }, {
+        "source" : null,
+        "targetIds" : [ 2 ],
+        "position" : {
+          "x" : 5.515551697997477,
+          "y" : 8.380506105071532
+        },
+        "velocity" : {
+          "x" : 0.0,
+          "y" : 0.0
+        },
+        "nextTargetListIndex" : 0,
+        "freeFlowSpeed" : 1.6804382036458225,
+        "attributes" : {
+          "id" : 21,
+          "radius" : 0.2,
+          "densityDependentSpeed" : false,
+          "speedDistributionMean" : 1.34,
+          "speedDistributionStandardDeviation" : 0.26,
+          "minimumSpeed" : 0.5,
+          "maximumSpeed" : 2.2,
+          "acceleration" : 2.0,
+          "footStepsToStore" : 4,
+          "searchRadius" : 1.0,
+          "angleCalculationType" : "USE_CENTER",
+          "targetOrientationAngleThreshold" : 45.0
+        },
+        "idAsTarget" : -1,
+        "isChild" : false,
+        "isLikelyInjured" : false,
+        "mostImportantEvent" : null,
+        "salientBehavior" : "TARGET_ORIENTED",
+        "groupIds" : [ ],
+        "trajectory" : {
+          "footSteps" : [ ]
+        },
+        "groupSizes" : [ ],
+        "modelPedestrianMap" : { },
+        "type" : "PEDESTRIAN"
+      }, {
+        "source" : null,
+        "targetIds" : [ 2 ],
+        "position" : {
+          "x" : 4.928248901127562,
+          "y" : 10.233007336801807
+        },
+        "velocity" : {
+          "x" : 0.0,
+          "y" : 0.0
+        },
+        "nextTargetListIndex" : 0,
+        "freeFlowSpeed" : 1.6804382036458225,
+        "attributes" : {
+          "id" : 22,
+          "radius" : 0.2,
+          "densityDependentSpeed" : false,
+          "speedDistributionMean" : 1.34,
+          "speedDistributionStandardDeviation" : 0.26,
+          "minimumSpeed" : 0.5,
+          "maximumSpeed" : 2.2,
+          "acceleration" : 2.0,
+          "footStepsToStore" : 4,
+          "searchRadius" : 1.0,
+          "angleCalculationType" : "USE_CENTER",
+          "targetOrientationAngleThreshold" : 45.0
+        },
+        "idAsTarget" : -1,
+        "isChild" : false,
+        "isLikelyInjured" : false,
+        "mostImportantEvent" : null,
+        "salientBehavior" : "TARGET_ORIENTED",
+        "groupIds" : [ ],
+        "trajectory" : {
+          "footSteps" : [ ]
+        },
+        "groupSizes" : [ ],
+        "modelPedestrianMap" : { },
+        "type" : "PEDESTRIAN"
+      }, {
+        "source" : null,
+        "targetIds" : [ 2 ],
+        "position" : {
+          "x" : 8.012860191622995,
+          "y" : 10.528595073457911
+        },
+        "velocity" : {
+          "x" : 0.0,
+          "y" : 0.0
+        },
+        "nextTargetListIndex" : 0,
+        "freeFlowSpeed" : 1.6804382036458225,
+        "attributes" : {
+          "id" : 23,
+          "radius" : 0.2,
+          "densityDependentSpeed" : false,
+          "speedDistributionMean" : 1.34,
+          "speedDistributionStandardDeviation" : 0.26,
+          "minimumSpeed" : 0.5,
+          "maximumSpeed" : 2.2,
+          "acceleration" : 2.0,
+          "footStepsToStore" : 4,
+          "searchRadius" : 1.0,
+          "angleCalculationType" : "USE_CENTER",
+          "targetOrientationAngleThreshold" : 45.0
+        },
+        "idAsTarget" : -1,
+        "isChild" : false,
+        "isLikelyInjured" : false,
+        "mostImportantEvent" : null,
+        "salientBehavior" : "TARGET_ORIENTED",
+        "groupIds" : [ ],
+        "trajectory" : {
+          "footSteps" : [ ]
+        },
+        "groupSizes" : [ ],
+        "modelPedestrianMap" : { },
+        "type" : "PEDESTRIAN"
+      }, {
+        "source" : null,
+        "targetIds" : [ 2 ],
+        "position" : {
+          "x" : 6.65110841767874,
+          "y" : 9.308731581693237
+        },
+        "velocity" : {
+          "x" : 0.0,
+          "y" : 0.0
+        },
+        "nextTargetListIndex" : 0,
+        "freeFlowSpeed" : 1.6804382036458225,
+        "attributes" : {
+          "id" : 24,
+          "radius" : 0.2,
+          "densityDependentSpeed" : false,
+          "speedDistributionMean" : 1.34,
+          "speedDistributionStandardDeviation" : 0.26,
+          "minimumSpeed" : 0.5,
+          "maximumSpeed" : 2.2,
+          "acceleration" : 2.0,
+          "footStepsToStore" : 4,
+          "searchRadius" : 1.0,
+          "angleCalculationType" : "USE_CENTER",
+          "targetOrientationAngleThreshold" : 45.0
+        },
+        "idAsTarget" : -1,
+        "isChild" : false,
+        "isLikelyInjured" : false,
+        "mostImportantEvent" : null,
+        "salientBehavior" : "TARGET_ORIENTED",
+        "groupIds" : [ ],
+        "trajectory" : {
+          "footSteps" : [ ]
+        },
+        "groupSizes" : [ ],
+        "modelPedestrianMap" : { },
+        "type" : "PEDESTRIAN"
+      }, {
+        "source" : null,
+        "targetIds" : [ 2 ],
+        "position" : {
+          "x" : 4.821302118967028,
+          "y" : 8.411386310203872
+        },
+        "velocity" : {
+          "x" : 0.0,
+          "y" : 0.0
+        },
+        "nextTargetListIndex" : 0,
+        "freeFlowSpeed" : 1.6804382036458225,
+        "attributes" : {
+          "id" : 25,
+          "radius" : 0.2,
+          "densityDependentSpeed" : false,
+          "speedDistributionMean" : 1.34,
+          "speedDistributionStandardDeviation" : 0.26,
+          "minimumSpeed" : 0.5,
+          "maximumSpeed" : 2.2,
+          "acceleration" : 2.0,
+          "footStepsToStore" : 4,
+          "searchRadius" : 1.0,
+          "angleCalculationType" : "USE_CENTER",
+          "targetOrientationAngleThreshold" : 45.0
+        },
+        "idAsTarget" : -1,
+        "isChild" : false,
+        "isLikelyInjured" : false,
+        "mostImportantEvent" : null,
+        "salientBehavior" : "TARGET_ORIENTED",
+        "groupIds" : [ ],
+        "trajectory" : {
+          "footSteps" : [ ]
+        },
+        "groupSizes" : [ ],
+        "modelPedestrianMap" : { },
+        "type" : "PEDESTRIAN"
+      }, {
+        "source" : null,
+        "targetIds" : [ 2 ],
+        "position" : {
+          "x" : 7.3281777482393355,
+          "y" : 9.06191427620093
+        },
+        "velocity" : {
+          "x" : 0.0,
+          "y" : 0.0
+        },
+        "nextTargetListIndex" : 0,
+        "freeFlowSpeed" : 1.6804382036458225,
+        "attributes" : {
+          "id" : 26,
+          "radius" : 0.2,
+          "densityDependentSpeed" : false,
+          "speedDistributionMean" : 1.34,
+          "speedDistributionStandardDeviation" : 0.26,
+          "minimumSpeed" : 0.5,
+          "maximumSpeed" : 2.2,
+          "acceleration" : 2.0,
+          "footStepsToStore" : 4,
+          "searchRadius" : 1.0,
+          "angleCalculationType" : "USE_CENTER",
+          "targetOrientationAngleThreshold" : 45.0
+        },
+        "idAsTarget" : -1,
+        "isChild" : false,
+        "isLikelyInjured" : false,
+        "mostImportantEvent" : null,
+        "salientBehavior" : "TARGET_ORIENTED",
+        "groupIds" : [ ],
+        "trajectory" : {
+          "footSteps" : [ ]
+        },
+        "groupSizes" : [ ],
+        "modelPedestrianMap" : { },
+        "type" : "PEDESTRIAN"
+      }, {
+        "source" : null,
+        "targetIds" : [ 2 ],
+        "position" : {
+          "x" : 6.107396689543541,
+          "y" : 8.7171686333859
+        },
+        "velocity" : {
+          "x" : 0.0,
+          "y" : 0.0
+        },
+        "nextTargetListIndex" : 0,
+        "freeFlowSpeed" : 1.6804382036458225,
+        "attributes" : {
+          "id" : 27,
+          "radius" : 0.2,
+          "densityDependentSpeed" : false,
+          "speedDistributionMean" : 1.34,
+          "speedDistributionStandardDeviation" : 0.26,
+          "minimumSpeed" : 0.5,
+          "maximumSpeed" : 2.2,
+          "acceleration" : 2.0,
+          "footStepsToStore" : 4,
+          "searchRadius" : 1.0,
+          "angleCalculationType" : "USE_CENTER",
+          "targetOrientationAngleThreshold" : 45.0
+        },
+        "idAsTarget" : -1,
+        "isChild" : false,
+        "isLikelyInjured" : false,
+        "mostImportantEvent" : null,
+        "salientBehavior" : "TARGET_ORIENTED",
+        "groupIds" : [ ],
+        "trajectory" : {
+          "footSteps" : [ ]
+        },
+        "groupSizes" : [ ],
+        "modelPedestrianMap" : { },
+        "type" : "PEDESTRIAN"
+      }, {
+        "source" : null,
+        "targetIds" : [ 2 ],
+        "position" : {
+          "x" : 5.568100909964871,
+          "y" : 9.957004402077589
+        },
+        "velocity" : {
+          "x" : 0.0,
+          "y" : 0.0
+        },
+        "nextTargetListIndex" : 0,
+        "freeFlowSpeed" : 1.6804382036458225,
+        "attributes" : {
+          "id" : 28,
+          "radius" : 0.2,
+          "densityDependentSpeed" : false,
+          "speedDistributionMean" : 1.34,
+          "speedDistributionStandardDeviation" : 0.26,
+          "minimumSpeed" : 0.5,
+          "maximumSpeed" : 2.2,
+          "acceleration" : 2.0,
+          "footStepsToStore" : 4,
+          "searchRadius" : 1.0,
+          "angleCalculationType" : "USE_CENTER",
+          "targetOrientationAngleThreshold" : 45.0
+        },
+        "idAsTarget" : -1,
+        "isChild" : false,
+        "isLikelyInjured" : false,
+        "mostImportantEvent" : null,
+        "salientBehavior" : "TARGET_ORIENTED",
+        "groupIds" : [ ],
+        "trajectory" : {
+          "footSteps" : [ ]
+        },
+        "groupSizes" : [ ],
+        "modelPedestrianMap" : { },
+        "type" : "PEDESTRIAN"
+      }, {
+        "source" : null,
+        "targetIds" : [ 2 ],
+        "position" : {
+          "x" : 7.394024059302722,
+          "y" : 10.207754710871322
+        },
+        "velocity" : {
+          "x" : 0.0,
+          "y" : 0.0
+        },
+        "nextTargetListIndex" : 0,
+        "freeFlowSpeed" : 1.6804382036458225,
+        "attributes" : {
+          "id" : 29,
+          "radius" : 0.2,
+          "densityDependentSpeed" : false,
+          "speedDistributionMean" : 1.34,
+          "speedDistributionStandardDeviation" : 0.26,
+          "minimumSpeed" : 0.5,
+          "maximumSpeed" : 2.2,
+          "acceleration" : 2.0,
+          "footStepsToStore" : 4,
+          "searchRadius" : 1.0,
+          "angleCalculationType" : "USE_CENTER",
+          "targetOrientationAngleThreshold" : 45.0
+        },
+        "idAsTarget" : -1,
+        "isChild" : false,
+        "isLikelyInjured" : false,
+        "mostImportantEvent" : null,
+        "salientBehavior" : "TARGET_ORIENTED",
+        "groupIds" : [ ],
+        "trajectory" : {
+          "footSteps" : [ ]
+        },
+        "groupSizes" : [ ],
+        "modelPedestrianMap" : { },
+        "type" : "PEDESTRIAN"
+      }, {
+        "source" : null,
+        "targetIds" : [ 2 ],
+        "position" : {
+          "x" : 4.370677707315892,
+          "y" : 9.872324114061133
+        },
+        "velocity" : {
+          "x" : 0.0,
+          "y" : 0.0
+        },
+        "nextTargetListIndex" : 0,
+        "freeFlowSpeed" : 1.6804382036458225,
+        "attributes" : {
+          "id" : 30,
+          "radius" : 0.2,
+          "densityDependentSpeed" : false,
+          "speedDistributionMean" : 1.34,
+          "speedDistributionStandardDeviation" : 0.26,
+          "minimumSpeed" : 0.5,
+          "maximumSpeed" : 2.2,
+          "acceleration" : 2.0,
+          "footStepsToStore" : 4,
+          "searchRadius" : 1.0,
+          "angleCalculationType" : "USE_CENTER",
+          "targetOrientationAngleThreshold" : 45.0
+        },
+        "idAsTarget" : -1,
+        "isChild" : false,
+        "isLikelyInjured" : false,
+        "mostImportantEvent" : null,
+        "salientBehavior" : "TARGET_ORIENTED",
+        "groupIds" : [ ],
+        "trajectory" : {
+          "footSteps" : [ ]
+        },
+        "groupSizes" : [ ],
+        "modelPedestrianMap" : { },
+        "type" : "PEDESTRIAN"
+      } ],
+      "attributesPedestrian" : {
+        "radius" : 0.2,
+        "densityDependentSpeed" : false,
+        "speedDistributionMean" : 1.34,
+        "speedDistributionStandardDeviation" : 0.26,
+        "minimumSpeed" : 0.5,
+        "maximumSpeed" : 2.2,
+        "acceleration" : 2.0,
+        "footStepsToStore" : 4,
+        "searchRadius" : 1.0,
+        "angleCalculationType" : "USE_CENTER",
+        "targetOrientationAngleThreshold" : 45.0
+      },
+      "teleporter" : null,
+      "attributesCar" : {
+        "id" : -1,
+        "radius" : 0.2,
+        "densityDependentSpeed" : false,
+        "speedDistributionMean" : 1.34,
+        "speedDistributionStandardDeviation" : 0.26,
+        "minimumSpeed" : 0.5,
+        "maximumSpeed" : 2.2,
+        "acceleration" : 2.0,
+        "footStepsToStore" : 4,
+        "searchRadius" : 1.0,
+        "angleCalculationType" : "USE_CENTER",
+        "targetOrientationAngleThreshold" : 45.0,
+        "length" : 4.5,
+        "width" : 1.7,
+        "direction" : {
+          "x" : 1.0,
+          "y" : 0.0
+        }
+      }
+    },
+    "eventInfos" : [ ]
+  }
+}
