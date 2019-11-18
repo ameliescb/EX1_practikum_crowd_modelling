@@ -2,11 +2,12 @@
   "name" : "task5",
   "description" : "",
   "release" : "1.0",
+  "commithash" : "8c70caee933026d48c0d8e0f1dc23bcb2ed66a4c",
   "processWriters" : {
     "files" : [ {
       "type" : "org.vadere.simulator.projects.dataprocessing.outputfile.TimestepPedestrianIdOutputFile",
       "filename" : "postvis.trajectories",
-      "processors" : [ 1, 2, 5 ]
+      "processors" : [ 1, 2 ]
     }, {
       "type" : "org.vadere.simulator.projects.dataprocessing.outputfile.TimestepPedestrianIdOverlapOutputFile",
       "filename" : "overlaps.csv",
@@ -33,8 +34,13 @@
         "pedestrianOverlapProcessorId" : 3
       }
     }, {
-      "type" : "org.vadere.simulator.projects.dataprocessing.processor.PedestrianVelocityDefaultProcessor",
-      "id" : 5
+      "type" : "org.vadere.simulator.projects.dataprocessing.processor.PedestrianVelocityByTrajectoryProcessor",
+      "id" : 5,
+      "attributesType" : "org.vadere.state.attributes.processor.AttributesPedestrianVelocityByTrajectoryProcessor",
+      "attributes" : {
+        "pedestrianTrajectoryProcessorId" : 0,
+        "backSteps" : 1
+      }
     } ],
     "isTimestamped" : true,
     "isWriteMetaData" : false
@@ -94,7 +100,7 @@
       }
     },
     "attributesSimulation" : {
-      "finishTime" : 1.0,
+      "finishTime" : 500.0,
       "simTimeStepLength" : 0.4,
       "realTimeSimTimeRatio" : 0.1,
       "writeSimulationData" : true,
@@ -103,7 +109,7 @@
       "digitsPerCoordinate" : 2,
       "useFixedSeed" : true,
       "fixedSeed" : -7603193638816494904,
-      "simulationSeed" : 0,
+      "simulationSeed" : -7603193638816494904,
       "useSalientBehavior" : false
     },
     "topography" : {

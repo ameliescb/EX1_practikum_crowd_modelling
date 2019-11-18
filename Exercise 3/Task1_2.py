@@ -43,7 +43,7 @@ x = np.linspace(-1, 1, nx)
 y = np.linspace(-1, 1, ny)
 X,Y = np.meshgrid(x, y)
 fig = plt.figure(figsize=(9, 9))
-gridspec.GridSpec(nrows=3, ncols=2, height_ratios=[1, 1, 2])
+gs = gridspec.GridSpec(nrows=3, ncols=2, height_ratios=[1, 1, 2])
 
 
 #########################Alpha = 0.1 ############################# 
