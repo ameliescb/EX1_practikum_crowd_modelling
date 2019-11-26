@@ -80,8 +80,8 @@ def bifurcation_diagram(seed, n_skip, n_iter, step=0.0001, r_min=0, r_max=0):
             x = logistic_eq(r,x)
     # Plot the data    
     plt.plot(R, X, ls='', marker=',')
-    plt.ylim(0, 1)
-    plt.xlim(r_min, 4)
+    #plt.ylim(0, 1)
+    plt.xlim(r_min, r_max)
     plt.xlabel('r')
     plt.ylabel('X')
     plt.show()
@@ -89,7 +89,7 @@ def bifurcation_diagram(seed, n_skip, n_iter, step=0.0001, r_min=0, r_max=0):
 
 # In[ ]:
 
-bifurcation_diagram(0.1, 1000, 100, r_min=0, r_max=4)
+bifurcation_diagram(0.2, 1000, 100, r_min=0, r_max=4)
 
 #bifurcation_diagram(0.2, 100, 5)
 #bifurcation_diagram(0.2, 100, 10)
