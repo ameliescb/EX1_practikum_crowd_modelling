@@ -98,7 +98,7 @@ def dpdt(p, t):
     return p*(alpha-p**2)
 
 def dOdt(O, t):
-    return 0.2
+    return 1
 
 x0, y0 = (0.5, 0)
 
@@ -113,13 +113,11 @@ x1 = np.array([x1.real for x1 in x])
 x2 = np.array([x2.imag for x2 in x])
 
 fig = plt.figure(figsize = [10,4])
-ax1 = fig.add_subplot(121)#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Nov 25 17:58:00 2019
+ax1 = fig.add_subplot(121)
 
-@author: mayau
-"""
+
+
+
 ax1.title.set_text('Init: '+ str([x0,y0]))
 ax1.plot(x1, x2)
 #plt.title('initial point: ' [x0,y0])
@@ -175,10 +173,10 @@ for j in range(n-1):
     
 ax = plt.figure(figsize=(15, 15))     
 ax = plt.axes(projection='3d')
-ax.scatter3D(alpha1, alpha2, x, )
-ax.scatter3D(alpha12, alpha22, x2)
-ax.scatter3D(alpha13, alpha23, x3)
+ax.scatter3D(alpha1, alpha2, x, color = "g")
+ax.scatter3D(alpha12, alpha22, x2, color = "g")
+ax.scatter3D(alpha13, alpha23, x3, color = "g")
 
 
-ax.view_init(80, 90)
+ax.view_init(30, 90)
 #plt.draw()
