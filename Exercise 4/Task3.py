@@ -1,276 +1,216 @@
-import numpy as np
-import tensorflow.compat.v1 as tf
-tf.disable_v2_behavior()
+import torch
+import torch.nn as nn
+import torch.optim as optim
+import torch.nn.functional as F
+
+from torch.utils.data import DataLoader
+from torchvision import datasets, transforms
 
 import matplotlib.pyplot as plt
 
-np.random.seed(0)
-tf.set_random_seed(0)
+device = torch.device('cpu')
 
-import input_data
-mnist = input_data.read_data_sets('MNIST_data', one_hot=True)
-n_samples = mnist.train.num_examples
+transforms = transforms.Compose([transforms.ToTensor()])
+train_dataset = datasets.MNIST(
+    './data',
+    train=True,
+    download=True,
+    transform=transforms)
 
-def xavier_init(fan_in, fan_out, constant=1): 
-    """ Xavier initialization of network weights"""
-    # https://stackoverflow.com/questions/33640581/how-to-do-xavier-initialization-on-tensorflow
-    low = -constant*np.sqrt(6.0/(fan_in + fan_out)) 
-    high = constant*np.sqrt(6.0/(fan_in + fan_out))
-    return tf.random_uniform((fan_in, fan_out), 
-                             minval=low, maxval=high, 
-                             dtype=tf.float32)
+test_dataset = datasets.MNIST(
+    './data',
+    train=False,
+    download=True,
+    transform=transforms
+)
 
-class VariationalAutoencoder(object):
-    """ Variation Autoencoder (VAE) with an sklearn-like interface implemented using TensorFlow.
-    
-    This implementation uses probabilistic encoders and decoders using Gaussian 
-    distributions and  realized by multi-layer perceptrons. The VAE can be learned
-    end-to-end.
-    
-    See "Auto-Encoding Variational Bayes" by Kingma and Welling for more details.
-    """
-    def __init__(self, network_architecture, transfer_fct=tf.nn.softplus, 
-                 learning_rate=0.001, batch_size=100):
-        self.network_architecture = network_architecture
-        self.transfer_fct = transfer_fct
-        self.learning_rate = learning_rate
-        self.batch_size = batch_size
-        
-        # tf Graph input
-        self.x = tf.placeholder(tf.float32, [None, network_architecture["n_input"]])
-        
-        # Create autoencoder network
-        self._create_network()
-        # Define loss function based variational upper-bound and 
-        # corresponding optimizer
-        self._create_loss_optimizer()
-        
-        # Initializing the tensor flow variables
-        init = tf.global_variables_initializer()
+BATCH_SIZE = 128        # number of data points in each batch
+N_EPOCHS = 10           # times to run the model on complete data
+INPUT_DIM = 28 * 28     # size of each input
+HIDDEN_DIM = 256        # hidden dimension
+LATENT_DIM = 2          # latent vector dimension
+N_CLASSES = 10          # number of classes in the data
+lr = 0.001              # learning rate
 
-        # Launch the session
-        self.sess = tf.InteractiveSession()
-        self.sess.run(init)
-    
-    def _create_network(self):
-        # Initialize autoencode network weights and biases
-        network_weights = self._initialize_weights(**self.network_architecture)
+train_iterator = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)
+test_iterator = DataLoader(test_dataset, batch_size=BATCH_SIZE)
 
-        # Use recognition network to determine mean and 
-        # (log) variance of Gaussian distribution in latent
-        # space
-        self.z_mean, self.z_log_sigma_sq = \
-            self._recognition_network(network_weights["weights_recog"], 
-                                      network_weights["biases_recog"])
+def idx2onehot(idx, n=N_CLASSES):
 
-        # Draw one sample z from Gaussian distribution
-        n_z = self.network_architecture["n_z"]
-        eps = tf.random_normal((self.batch_size, n_z), 0, 1, 
-                               dtype=tf.float32)
-        # z = mu + sigma*epsilon
-        self.z = tf.add(self.z_mean, 
-                        tf.multiply(tf.sqrt(tf.exp(self.z_log_sigma_sq)), eps))
+    assert idx.shape[1] == 1
+    assert torch.max(idx).item() < n
 
-        # Use generator to determine mean of
-        # Bernoulli distribution of reconstructed input
-        self.x_reconstr_mean = \
-            self._generator_network(network_weights["weights_gener"],
-                                    network_weights["biases_gener"])
-            
-    def _initialize_weights(self, n_hidden_recog_1, n_hidden_recog_2, 
-                            n_hidden_gener_1,  n_hidden_gener_2, 
-                            n_input, n_z):
-        all_weights = dict()
-        all_weights['weights_recog'] = {
-            'h1': tf.Variable(xavier_init(n_input, n_hidden_recog_1)),
-            'h2': tf.Variable(xavier_init(n_hidden_recog_1, n_hidden_recog_2)),
-            'out_mean': tf.Variable(xavier_init(n_hidden_recog_2, n_z)),
-            'out_log_sigma': tf.Variable(xavier_init(n_hidden_recog_2, n_z))}
-        all_weights['biases_recog'] = {
-            'b1': tf.Variable(tf.zeros([n_hidden_recog_1], dtype=tf.float32)),
-            'b2': tf.Variable(tf.zeros([n_hidden_recog_2], dtype=tf.float32)),
-            'out_mean': tf.Variable(tf.zeros([n_z], dtype=tf.float32)),
-            'out_log_sigma': tf.Variable(tf.zeros([n_z], dtype=tf.float32))}
-        all_weights['weights_gener'] = {
-            'h1': tf.Variable(xavier_init(n_z, n_hidden_gener_1)),
-            'h2': tf.Variable(xavier_init(n_hidden_gener_1, n_hidden_gener_2)),
-            'out_mean': tf.Variable(xavier_init(n_hidden_gener_2, n_input)),
-            'out_log_sigma': tf.Variable(xavier_init(n_hidden_gener_2, n_input))}
-        all_weights['biases_gener'] = {
-            'b1': tf.Variable(tf.zeros([n_hidden_gener_1], dtype=tf.float32)),
-            'b2': tf.Variable(tf.zeros([n_hidden_gener_2], dtype=tf.float32)),
-            'out_mean': tf.Variable(tf.zeros([n_input], dtype=tf.float32)),
-            'out_log_sigma': tf.Variable(tf.zeros([n_input], dtype=tf.float32))}
-        return all_weights
-            
-    def _recognition_network(self, weights, biases):
-        # Generate probabilistic encoder (recognition network), which
-        # maps inputs onto a normal distribution in latent space.
-        # The transformation is parametrized and can be learned.
-        layer_1 = self.transfer_fct(tf.add(tf.matmul(self.x, weights['h1']), 
-                                           biases['b1'])) 
-        layer_2 = self.transfer_fct(tf.add(tf.matmul(layer_1, weights['h2']), 
-                                           biases['b2'])) 
-        z_mean = tf.add(tf.matmul(layer_2, weights['out_mean']),
-                        biases['out_mean'])
-        z_log_sigma_sq = \
-            tf.add(tf.matmul(layer_2, weights['out_log_sigma']), 
-                   biases['out_log_sigma'])
-        return (z_mean, z_log_sigma_sq)
+    onehot = torch.zeros(idx.size(0), n)
+    onehot.scatter_(1, idx.data, 1)
 
-    def _generator_network(self, weights, biases):
-        # Generate probabilistic decoder (decoder network), which
-        # maps points in latent space onto a Bernoulli distribution in data space.
-        # The transformation is parametrized and can be learned.
-        layer_1 = self.transfer_fct(tf.add(tf.matmul(self.z, weights['h1']), 
-                                           biases['b1'])) 
-        layer_2 = self.transfer_fct(tf.add(tf.matmul(layer_1, weights['h2']), 
-                                           biases['b2'])) 
-        x_reconstr_mean = \
-            tf.nn.sigmoid(tf.add(tf.matmul(layer_2, weights['out_mean']), 
-                                 biases['out_mean']))
-        return x_reconstr_mean
-            
-    def _create_loss_optimizer(self):
-        # The loss is composed of two terms:
-        # 1.) The reconstruction loss (the negative log probability
-        #     of the input under the reconstructed Bernoulli distribution 
-        #     induced by the decoder in the data space).
-        #     This can be interpreted as the number of "nats" required
-        #     for reconstructing the input when the activation in latent
-        #     is given.
-        # Adding 1e-10 to avoid evaluation of log(0.0)
-        reconstr_loss = \
-            -tf.reduce_sum(self.x * tf.log(1e-10 + self.x_reconstr_mean)
-                           + (1-self.x) * tf.log(1e-10 + 1 - self.x_reconstr_mean),
-                           1)
-        # 2.) The latent loss, which is defined as the Kullback Leibler divergence 
-        ##    between the distribution in latent space induced by the encoder on 
-        #     the data and some prior. This acts as a kind of regularizer.
-        #     This can be interpreted as the number of "nats" required
-        #     for transmitting the the latent space distribution given
-        #     the prior.
-        latent_loss = -0.5 * tf.reduce_sum(1 + self.z_log_sigma_sq 
-                                           - tf.square(self.z_mean) 
-                                           - tf.exp(self.z_log_sigma_sq), 1)
-        self.cost = tf.reduce_mean(reconstr_loss + latent_loss)   # average over batch
-        # Use ADAM optimizer
-        self.optimizer = \
-            tf.train.AdamOptimizer(learning_rate=self.learning_rate).minimize(self.cost)
-        
-    def partial_fit(self, X):
-        """Train model based on mini-batch of input data.
-        
-        Return cost of mini-batch.
-        """
-        opt, cost = self.sess.run((self.optimizer, self.cost), 
-                                  feed_dict={self.x: X})
-        return cost
-    
-    def transform(self, X):
-        """Transform data by mapping it into the latent space."""
-        # Note: This maps to mean of distribution, we could alternatively
-        # sample from Gaussian distribution
-        return self.sess.run(self.z_mean, feed_dict={self.x: X})
-    
-    def generate(self, z_mu=None):
-        """ Generate data by sampling from latent space.
-        
-        If z_mu is not None, data for this point in latent space is
-        generated. Otherwise, z_mu is drawn from prior in latent 
-        space.        
-        """
-        if z_mu is None:
-            z_mu = np.random.normal(size=self.network_architecture["n_z"])
-        # Note: This maps to mean of distribution, we could alternatively
-        # sample from Gaussian distribution
-        return self.sess.run(self.x_reconstr_mean, 
-                             feed_dict={self.z: z_mu})
-    
-    def reconstruct(self, X):
-        """ Use VAE to reconstruct given data. """
-        return self.sess.run(self.x_reconstr_mean, 
-                             feed_dict={self.x: X})
+    return onehot
 
-def train(network_architecture, learning_rate=0.001,
-          batch_size=100, training_epochs=10, display_step=5):
-    vae = VariationalAutoencoder(network_architecture, 
-                                 learning_rate=learning_rate, 
-                                 batch_size=batch_size)
-    # Training cycle
-    for epoch in range(training_epochs):
-        avg_cost = 0.
-        total_batch = int(n_samples / batch_size)
-        # Loop over all batches
-        for i in range(total_batch):
-            batch_xs, _ = mnist.train.next_batch(batch_size)
+class Encoder(nn.Module):
 
-            # Fit training using batch data
-            cost = vae.partial_fit(batch_xs)
-            # Compute average loss
-            avg_cost += cost / n_samples * batch_size
+    def __init__(self, input_dim, hidden_dim, latent_dim, n_classes):
+        super().__init__()
 
-        # Display logs per epoch step
-        if epoch % display_step == 0:
-            print("Epoch:", '%04d' % (epoch+1), 
-                  "cost=", "{:.9f}".format(avg_cost))
-    return vae
+        self.encode1 = nn.Linear(input_dim + n_classes, hidden_dim)
+        self.encode2 = nn.Linear(hidden_dim, hidden_dim)
 
-network_architecture = \
-    dict(n_hidden_recog_1=500, # 1st layer encoder neurons
-         n_hidden_recog_2=500, # 2nd layer encoder neurons
-         n_hidden_gener_1=500, # 1st layer decoder neurons
-         n_hidden_gener_2=500, # 2nd layer decoder neurons
-         n_input=784, # MNIST data input (img shape: 28*28)
-         n_z=20)  # dimensionality of latent space
+        self.mu = nn.Linear(hidden_dim, latent_dim)
+        self.var = nn.Linear(hidden_dim, latent_dim)
 
-vae = train(network_architecture, training_epochs=75)
+    def forward(self, x):
 
-x_sample = mnist.test.next_batch(100)[0]
-x_reconstruct = vae.reconstruct(x_sample)
+        hidden1 = F.relu(self.encode1(x))
+        hidden2 = F.relu(self.encode2(hidden1))
 
-plt.figure(figsize=(8, 12))
-for i in range(5):
+        mean = self.mu(hidden2)
+        log_var = self.var(hidden2)
 
-    plt.subplot(5, 2, 2*i + 1)
-    plt.imshow(x_sample[i].reshape(28, 28), vmin=0, vmax=1, cmap="gray")
-    plt.title("Test input")
-    plt.colorbar()
-    plt.subplot(5, 2, 2*i + 2)
-    plt.imshow(x_reconstruct[i].reshape(28, 28), vmin=0, vmax=1, cmap="gray")
-    plt.title("Reconstruction")
-    plt.colorbar()
-plt.tight_layout()
+        return mean, log_var
 
-network_architecture = \
-    dict(n_hidden_recog_1=500, # 1st layer encoder neurons
-         n_hidden_recog_2=500, # 2nd layer encoder neurons
-         n_hidden_gener_1=500, # 1st layer decoder neurons
-         n_hidden_gener_2=500, # 2nd layer decoder neurons
-         n_input=784, # MNIST data input (img shape: 28*28)
-         n_z=2)  # dimensionality of latent space
+class Decoder(nn.Module):
 
-vae_2d = train(network_architecture, training_epochs=75)
+    def __init__(self, latent_dim, hidden_dim, output_dim, n_classes):
+        super().__init__()
 
-x_sample, y_sample = mnist.test.next_batch(5000)
-z_mu = vae_2d.transform(x_sample)
-plt.figure(figsize=(8, 6)) 
-plt.scatter(z_mu[:, 0], z_mu[:, 1], c=np.argmax(y_sample, 1))
-plt.colorbar()
-plt.grid()
+        self.decode1 = nn.Linear(latent_dim + n_classes, hidden_dim)
+        self.decode2 = nn.Linear(hidden_dim, output_dim)
 
-nx = ny = 20
-x_values = np.linspace(-3, 3, nx)
-y_values = np.linspace(-3, 3, ny)
+    def forward(self, x):
 
-canvas = np.empty((28*ny, 28*nx))
-for i, yi in enumerate(x_values):
-    for j, xi in enumerate(y_values):
-        z_mu = np.array([[xi, yi]]*vae.batch_size)
-        x_mean = vae_2d.generate(z_mu)
-        canvas[(nx-i-1)*28:(nx-i)*28, j*28:(j+1)*28] = x_mean[0].reshape(28, 28)
+        h = F.relu(self.decode1(x))
+        output = torch.sigmoid(self.decode2(h))
 
-plt.figure(figsize=(8, 10))        
-Xi, Yi = np.meshgrid(x_values, y_values)
-plt.imshow(canvas, origin="upper", cmap="gray")
-plt.tight_layout()
+        return output
+
+class CVAE(nn.Module):
+
+    def __init__(self, input_dim, hidden_dim, latent_dim, n_classes):
+        super().__init__()
+
+        self.encoder = Encoder(input_dim, hidden_dim, latent_dim, n_classes)
+        self.decoder = Decoder(latent_dim, hidden_dim, input_dim, n_classes)
+
+    def forward(self, x, y):
+
+        x = torch.cat((x, y), dim=1)
+
+        z_mu, z_var = self.encoder(x)
+
+        std = torch.exp(z_var/2)
+        eps = torch.randn_like(std)
+        x_sample = eps.mul(std).add_(z_mu)
+
+        z = torch.cat((x_sample, y), dim=1)
+
+        output = self.decoder(z)
+
+        return output, z_mu, z_var
+
+model = CVAE(INPUT_DIM, HIDDEN_DIM, LATENT_DIM, N_CLASSES)
+optimizer = optim.Adam(model.parameters(), lr=lr)
+
+def calculate_loss(x, reconstructed_x, mean, log_var):
+    # reconstruction loss
+    RCL = F.binary_cross_entropy(reconstructed_x, x, size_average=False)
+    # kl divergence loss
+    KLD = -0.5 * torch.sum(1 + log_var - mean.pow(2) - log_var.exp())
+
+    return RCL + KLD
+
+def train():
+    # set the train mode
+    model.train()
+
+    # loss of the epoch
+    train_loss = 0
+
+    for i, (x, y) in enumerate(train_iterator):
+        # reshape the data into [batch_size, 784]
+        x = x.view(-1, 28 * 28)
+        x = x.to(device)
+
+        # convert y into one-hot encoding
+        y = idx2onehot(y.view(-1, 1))
+        y = y.to(device)
+
+        # update the gradients to zero
+        optimizer.zero_grad()
+
+        # forward pass
+        reconstructed_x, z_mu, z_var = model(x, y)
+
+        # loss
+        loss = calculate_loss(x, reconstructed_x, z_mu, z_var)
+
+        # backward pass
+        loss.backward()
+        train_loss += loss.item()
+
+        # update the weights
+        optimizer.step()
+
+    return train_loss
+
+def test():
+    # set the evaluation mode
+    model.eval()
+
+    # test loss for the data
+    test_loss = 0
+
+    # we don't need to track the gradients, since we are not updating the parameters during evaluation / testing
+    with torch.no_grad():
+        for i, (x, y) in enumerate(test_iterator):
+            # reshape the data
+            x = x.view(-1, 28 * 28)
+            x = x.to(device)
+
+            # convert y into one-hot encoding
+            y = idx2onehot(y.view(-1, 1))
+            y = y.to(device)
+
+            # forward pass
+            reconstructed_x, z_mu, z_var = model(x, y)
+
+            # loss
+            loss = calculate_loss(x, reconstructed_x, z_mu, z_var)
+            test_loss += loss.item()
+
+    return test_loss
+
+for e in range(N_EPOCHS):
+
+    best_test_loss = 10000
+    train_loss = train()
+    test_loss = test()
+
+    train_loss /= len(train_dataset)
+    test_loss /= len(test_dataset)
+
+    print(f'Epoch {e}, Train Loss: {train_loss:.2f}, Test Loss: {test_loss:.2f}')
+
+    if best_test_loss > test_loss:
+        best_test_loss = test_loss
+        patience_counter = 1
+    else:
+        patience_counter += 1
+
+    if patience_counter > 3:
+        break
+
+for i in range(10):
+# create a random latent vector
+    z = torch.randn(1, LATENT_DIM).to(device)
+
+    # pick randomly 1 class, for which we want to generate the data
+    y = torch.randint(0, N_CLASSES, (1, 1)).to(dtype=torch.long)
+    print(f'Generating a {y.item()}')
+
+    y = idx2onehot(y).to(device, dtype=z.dtype)
+    z = torch.cat((z, y), dim=1)
+
+    reconstructed_img = model.decoder(z)
+    img = reconstructed_img.view(28, 28).data
+
+    plt.figure()
+    plt.imshow(img, cmap='gray')
+    plt.show()
