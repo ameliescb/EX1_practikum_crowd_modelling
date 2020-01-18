@@ -31,7 +31,6 @@ public class AgentControl : MonoBehaviour
                agent.SetDestination(hit.point) ; 
            }
         }
-        agent.speed = 10 ; 
 
 
     }

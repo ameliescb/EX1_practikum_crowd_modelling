@@ -53,6 +53,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Change_speed.cs" />
+     <Compile Include="Assets\Pedestrians_changes.cs" />
      <Compile Include="Assets\Scenes\AgentControl.cs" />
  <Reference Include="Unity.TextMeshPro.Editor">
  <HintPath>C:/Users/amelie/Desktop/TUM/Cours/Practical_crowd_modelling/EX1_practikum_crowd_modelling/New Unity Project/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
