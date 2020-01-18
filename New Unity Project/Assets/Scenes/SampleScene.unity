@@ -169,6 +169,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   home: {fileID: 667251540}
+  cam: {fileID: 0}
 --- !u!54 &64446417
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -397,6 +398,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   home: {fileID: 667251540}
+  cam: {fileID: 0}
 --- !u!54 &322396539
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -542,6 +544,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   home: {fileID: 667251540}
+  cam: {fileID: 0}
 --- !u!54 &379277296
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -687,6 +690,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   home: {fileID: 667251540}
+  cam: {fileID: 0}
 --- !u!54 &425669949
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -832,6 +836,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   home: {fileID: 667251540}
+  cam: {fileID: 0}
 --- !u!54 &467906723
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -977,6 +982,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   home: {fileID: 667251540}
+  cam: {fileID: 0}
 --- !u!54 &481841180
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1108,6 +1114,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   home: {fileID: 667251540}
+  cam: {fileID: 0}
 --- !u!54 &487872531
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1335,6 +1342,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   home: {fileID: 667251540}
+  cam: {fileID: 0}
 --- !u!54 &594010410
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1480,6 +1488,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   home: {fileID: 667251540}
+  cam: {fileID: 534669904}
 --- !u!54 &594293784
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1716,6 +1725,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   home: {fileID: 667251540}
+  cam: {fileID: 0}
 --- !u!54 &625831635
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1966,6 +1976,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   home: {fileID: 667251540}
+  cam: {fileID: 0}
 --- !u!54 &655283777
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2193,6 +2204,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   home: {fileID: 667251540}
+  cam: {fileID: 0}
 --- !u!54 &678028249
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2338,6 +2350,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   home: {fileID: 667251540}
+  cam: {fileID: 534669904}
 --- !u!54 &703037357
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2847,6 +2860,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   home: {fileID: 667251540}
+  cam: {fileID: 0}
 --- !u!54 &1121148067
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3083,6 +3097,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   home: {fileID: 667251540}
+  cam: {fileID: 534669904}
 --- !u!54 &1168463351
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3333,6 +3348,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   home: {fileID: 667251540}
+  cam: {fileID: 0}
 --- !u!54 &1202182752
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3464,6 +3480,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   home: {fileID: 667251540}
+  cam: {fileID: 0}
 --- !u!54 &1209595247
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3701,6 +3718,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   home: {fileID: 667251540}
+  cam: {fileID: 0}
 --- !u!54 &1265955186
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3846,6 +3864,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   home: {fileID: 667251540}
+  cam: {fileID: 534669904}
 --- !u!54 &1296243452
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -4005,6 +4024,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   home: {fileID: 667251540}
+  cam: {fileID: 0}
 --- !u!54 &1311521127
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -4150,6 +4170,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   home: {fileID: 667251540}
+  cam: {fileID: 0}
 --- !u!54 &1316040900
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -4281,6 +4302,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   home: {fileID: 667251540}
+  cam: {fileID: 0}
 --- !u!54 &1318322870
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -4457,6 +4479,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   home: {fileID: 667251540}
+  cam: {fileID: 0}
 --- !u!54 &1324741987
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -4622,6 +4645,131 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 5, z: 0}
+--- !u!1 &1421476082
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1421476086}
+  - component: {fileID: 1421476085}
+  - component: {fileID: 1421476084}
+  - component: {fileID: 1421476083}
+  - component: {fileID: 1421476087}
+  - component: {fileID: 1421476088}
+  m_Layer: 0
+  m_Name: Obstacle
+  m_TagString: Untagged
+  m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!65 &1421476083
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1421476082}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &1421476084
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1421476082}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: aab6df5071a88894db07619c158b075c, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!33 &1421476085
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1421476082}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &1421476086
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1421476082}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 83.599, y: 5, z: -55}
+  m_LocalScale: {x: 4.956942, y: 1, z: 3.5242352}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 21
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!208 &1421476087
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1421476082}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
+--- !u!54 &1421476088
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1421476082}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &1480191641
 GameObject:
   m_ObjectHideFlags: 0
@@ -4693,6 +4841,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   home: {fileID: 667251540}
+  cam: {fileID: 0}
 --- !u!54 &1480191645
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -4838,6 +4987,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   home: {fileID: 667251540}
+  cam: {fileID: 0}
 --- !u!54 &1481499317
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -4969,6 +5119,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   home: {fileID: 667251540}
+  cam: {fileID: 534669904}
 --- !u!54 &1506380252
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -5219,6 +5370,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   home: {fileID: 667251540}
+  cam: {fileID: 0}
 --- !u!54 &1533582016
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -5546,6 +5698,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   home: {fileID: 667251540}
+  cam: {fileID: 0}
 --- !u!54 &1662270647
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -5677,6 +5830,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   home: {fileID: 667251540}
+  cam: {fileID: 534669904}
 --- !u!54 &1771606286
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -5927,6 +6081,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   home: {fileID: 667251540}
+  cam: {fileID: 0}
 --- !u!54 &1796941546
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -6141,6 +6296,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   home: {fileID: 667251540}
+  cam: {fileID: 0}
 --- !u!195 &1942848473
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -6220,6 +6376,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   home: {fileID: 667251540}
+  cam: {fileID: 0}
 --- !u!54 &1959604908
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -6470,6 +6627,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   home: {fileID: 667251540}
+  cam: {fileID: 0}
 --- !u!54 &2015783102
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -6706,6 +6864,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   home: {fileID: 667251540}
+  cam: {fileID: 0}
 --- !u!54 &2077410354
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -6837,6 +6996,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   home: {fileID: 667251540}
+  cam: {fileID: 0}
 --- !u!54 &2085228009
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -7073,6 +7233,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   home: {fileID: 667251540}
+  cam: {fileID: 0}
 --- !u!54 &2142640472
 Rigidbody:
   m_ObjectHideFlags: 0
