@@ -6,17 +6,22 @@ public class SpawnObject : MonoBehaviour
     public GameObject agent;
     public Vector3 center;
     public Vector3 size;
-    public Quaternion rotation;
+    
     // Start is called before the first frame update
     void Start()
     {
-        SpawnPedo();
+        int limit = 50;
+        int i = 0;
+        while (i<limit){
+            SpawnPedo();
+            i++;
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public void SpawnPedo()
