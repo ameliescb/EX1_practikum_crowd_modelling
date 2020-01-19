@@ -350,7 +350,18 @@ MonoBehaviour:
       m_Calls: []
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1113033095}
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_CaretColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_CustomCaretColor: 0
   m_SelectionColor: {r: 0.65882355, g: 0.80784315, b: 1, a: 0.7529412}
@@ -1153,7 +1164,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1113033100}
         m_MethodName: BeginSimulation
         m_Mode: 1
         m_Arguments:
@@ -4008,8 +4019,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94cfbadfe7b5b194a9706797c08efb8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  home: {fileID: 0}
-  cam: {fileID: 0}
+  home: {fileID: 667251540}
+  cam: {fileID: 534669904}
 --- !u!1 &1121148064
 GameObject:
   m_ObjectHideFlags: 0

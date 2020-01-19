@@ -7,7 +7,6 @@ public class AgentControl : MonoBehaviour
 {
     public Transform home;
     public Camera cam;
-    public InputField speedInput;
     NavMeshAgent agent;
    
 
@@ -34,8 +33,13 @@ public class AgentControl : MonoBehaviour
         Debug.Log("begin simulation clicked") ;
     } 
 
-  //  public void SpeedChange(String newspeed) {
-  //      agent = this.GetComponent<NavMeshAgent>();
-  //      Debug.Log("begin simulation clicked") ;
-  //  } 
+    public void SpeedChange(string[] newSpeed) {
+         Debug.Log("speed has been changed : ") ;
+         Debug.Log(newSpeed) ;
+   } 
+
+   public void pedNumChange(string[] newSpeed) {
+         Debug.Log("speed has been changed : ") ;
+         Debug.Log(newSpeed) ;
+   } 
 }
