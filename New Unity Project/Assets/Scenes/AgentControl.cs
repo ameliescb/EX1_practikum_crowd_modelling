@@ -8,14 +8,6 @@ public class AgentControl : MonoBehaviour
     public Transform home;
     public Camera cam;
     NavMeshAgent agent;
-    
-    // Start is called before the first frame update
-  //  void Start()
-   // {
-        
-     //   agent.SetDestination(home.position);
-      //  agent.speed = 50 ; 
-   // }
 
     void Update()
     {
@@ -31,7 +23,5 @@ public class AgentControl : MonoBehaviour
                agent.SetDestination(hit.point) ; 
            }
         }
-
-
     }
 }
