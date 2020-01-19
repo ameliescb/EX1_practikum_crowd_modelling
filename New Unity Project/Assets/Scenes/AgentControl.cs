@@ -33,13 +33,13 @@ public class AgentControl : MonoBehaviour
         Debug.Log("begin simulation clicked") ;
     } 
 
-    public void SpeedChange(string[] newSpeed) {
+    public void SpeedChange(string newSpeed) {
          Debug.Log("speed has been changed : ") ;
          Debug.Log(newSpeed) ;
    } 
 
-   public void pedNumChange(string[] newSpeed) {
-         Debug.Log("speed has been changed : ") ;
-         Debug.Log(newSpeed) ;
+   public void pedNumChange(string pedNum) {
+         Debug.Log("number of pedestrians has been changed : ") ;
+         Debug.Log(pedNum) ;
    } 
 }
