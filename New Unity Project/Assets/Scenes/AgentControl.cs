@@ -7,15 +7,9 @@ public class AgentControl : MonoBehaviour
 {
     public Transform home;
     public Camera cam;
+    public InputField speedInput;
     NavMeshAgent agent;
-    
-    // Start is called before the first frame update
-  //  void Start()
-   // {
-        
-     //   agent.SetDestination(home.position);
-      //  agent.speed = 50 ; 
-   // }
+   
 
     void Update()
     {
@@ -34,4 +28,14 @@ public class AgentControl : MonoBehaviour
 
 
     }
+
+    public void BeginSimulation() {
+        agent = this.GetComponent<NavMeshAgent>();
+        Debug.Log("begin simulation clicked") ;
+    } 
+
+  //  public void SpeedChange(String newspeed) {
+  //      agent = this.GetComponent<NavMeshAgent>();
+  //      Debug.Log("begin simulation clicked") ;
+  //  } 
 }
