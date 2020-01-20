@@ -53,9 +53,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Pedestrians_changes.cs" />
      <Compile Include="Assets\Scenes\AgentControl.cs" />
      <Compile Include="Assets\Scenes\BeginSimulation.cs" />
+     <Compile Include="Assets\Scenes\ChangeBackground.cs" />
      <Compile Include="Assets\Scenes\SpawnObject.cs" />
  <Reference Include="Unity.TextMeshPro.Editor">
  <HintPath>C:/Users/yalva/OneDrive/Belgeler/TUM/MLinCrowdModelling&amp;Simulation/practikum/New Unity Project/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
