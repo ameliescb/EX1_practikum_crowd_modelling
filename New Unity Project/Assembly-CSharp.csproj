@@ -56,7 +56,10 @@
      <Compile Include="Assets\Scenes\AgentControl.cs" />
      <Compile Include="Assets\Scenes\BeginSimulation.cs" />
      <Compile Include="Assets\Scenes\ChangeBackground.cs" />
+     <Compile Include="Assets\Scenes\SetFire.cs" />
      <Compile Include="Assets\Scenes\SpawnObject.cs" />
+     <None Include="Assets\ErbGameArt\Procedural fire\Shaders\FireSphere.shader" />
+     <None Include="Assets\ErbGameArt\Procedural fire\Demo scene\Readme.txt" />
  <Reference Include="Unity.TextMeshPro.Editor">
  <HintPath>C:/Users/yalva/OneDrive/Belgeler/TUM/MLinCrowdModelling&amp;Simulation/practikum/New Unity Project/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
  </Reference>
