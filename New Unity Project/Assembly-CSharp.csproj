@@ -60,10 +60,19 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\HumanAnimation\Example02 - Obstacles\ObstacleAnimation.cs" />
+    <Compile Include="Assets\HumanAnimation\Example03 - Runtime\LevelGenerator.cs" />
+    <Compile Include="Assets\HumanAnimation\Example05 - LowMan\LowMan\Scripts\ThirdPersonCharacter.cs" />
+    <Compile Include="Assets\HumanAnimation\NavMeshComponents\Scripts\NavMeshLink.cs" />
+    <Compile Include="Assets\HumanAnimation\NavMeshComponents\Scripts\NavMeshModifier.cs" />
+    <Compile Include="Assets\HumanAnimation\NavMeshComponents\Scripts\NavMeshModifierVolume.cs" />
+    <Compile Include="Assets\HumanAnimation\NavMeshComponents\Scripts\NavMeshSurface.cs" />
     <Compile Include="Assets\Scenes\AgentControl.cs" />
     <Compile Include="Assets\Scenes\BeginSimulation.cs" />
-    <Compile Include="Assets\Scenes\ChangeBackground.cs" />
+    <Compile Include="Assets\Scenes\SetFire.cs" />
     <Compile Include="Assets\Scenes\SpawnObject.cs" />
+    <None Include="Assets\ErbGameArt\Procedural fire\Shaders\FireSphere.shader" />
+    <None Include="Assets\ErbGameArt\Procedural fire\Demo scene\Readme.txt" />
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>C:/Users/yalva/OneDrive/Belgeler/TUM/MLinCrowdModelling&amp;Simulation/practikum/New Unity Project/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>
