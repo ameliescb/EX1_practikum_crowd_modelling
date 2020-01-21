@@ -8,6 +8,8 @@ public class BeginSimulation : MonoBehaviour
 
     public string speed;
     public string ped_amount;
+    public Color red = Color.red;
+    public Camera cm;
 
     public GameObject speedInput;
     public GameObject ped_amountInput;
@@ -29,6 +31,7 @@ public class BeginSimulation : MonoBehaviour
 
     public void simulate()
     {
+        cm.backgroundColor = red;
         getSpeed();
         getPedNum();
         trigger = true;

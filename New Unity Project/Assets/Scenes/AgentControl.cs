@@ -5,6 +5,7 @@ using UnityEngine.AI;
 
 public class AgentControl : MonoBehaviour
 {
+    public Transform home;
     public Camera cam;
     NavMeshAgent agent;
 
