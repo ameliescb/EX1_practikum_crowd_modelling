@@ -114,7 +114,7 @@ MonoBehaviour:
   m_MinSize: {x: 887, y: 498}
   m_MaxSize: {x: 16012, y: 14048}
   vertical: 0
-  controlID: 37657
+  controlID: 1067
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -139,7 +139,7 @@ MonoBehaviour:
   m_MinSize: {x: 610, y: 498}
   m_MaxSize: {x: 12010, y: 14048}
   vertical: 1
-  controlID: 37658
+  controlID: 1068
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -165,7 +165,7 @@ MonoBehaviour:
   m_MinSize: {x: 610, y: 224}
   m_MaxSize: {x: 12010, y: 4024}
   vertical: 0
-  controlID: 37659
+  controlID: 1069
 --- !u!114 &8
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -408,10 +408,10 @@ MonoBehaviour:
   m_PersistentViewDataDictionary: {fileID: 0}
   m_SceneHierarchy:
     m_TreeViewState:
-      scrollPos: {x: 0, y: 22.56249}
-      m_SelectedIDs: 
+      scrollPos: {x: 0, y: 0}
+      m_SelectedIDs: 12c40000
       m_LastClickedID: 0
-      m_ExpandedIDs: da58ffff98a7ffffccacfffffab6ffff0ac8ffffb0d0ffff2addffffc8dfffffccfbffffb02100005422000092230000
+      m_ExpandedIDs: defbffff
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -515,32 +515,6 @@ MonoBehaviour:
   m_LastLockedObject: {fileID: 0}
   m_ViewIsLockedToObject: 0
 --- !u!114 &16
-MonoBehaviour:
-  m_ObjectHideFlags: 52
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 1
-  m_Script: {fileID: 12111, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_MinSize: {x: 400, y: 100}
-  m_MaxSize: {x: 2048, y: 2048}
-  m_TitleContent:
-    m_Text: Asset Store
-    m_Image: {fileID: 357073275683767465, guid: 0000000000000000d000000000000000,
-      type: 0}
-    m_Tooltip: 
-  m_Pos:
-    serializedVersion: 2
-    x: 202
-    y: 73
-    width: 754
-    height: 688
-  m_PersistentViewDataDictionary: {fileID: 0}
---- !u!114 &17
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -654,6 +628,32 @@ MonoBehaviour:
   m_CurrentEditor: 0
   m_LayerEditor:
     m_SelectedLayerIndex: 0
+--- !u!114 &17
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 12111, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_MinSize: {x: 400, y: 100}
+  m_MaxSize: {x: 2048, y: 2048}
+  m_TitleContent:
+    m_Text: Asset Store
+    m_Image: {fileID: 357073275683767465, guid: 0000000000000000d000000000000000,
+      type: 0}
+    m_Tooltip: 
+  m_Pos:
+    serializedVersion: 2
+    x: 210
+    y: 81
+    width: 638
+    height: 325
+  m_PersistentViewDataDictionary: {fileID: 0}
 --- !u!114 &18
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -692,21 +692,21 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/school/road
+    - Assets/GrassFlowers/Textures/Ground
   m_ViewMode: 1
   m_StartGridSize: 92
   m_LastFolders:
-  - Assets/school/road
+  - Assets/GrassFlowers/Textures/Ground
   m_LastFoldersGridSize: 92
   m_LastProjectPath: C:\Users\lajed\Documents\Unity\repos\EX1_practikum_crowd_modelling\New
     Unity Project
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 579}
-    m_SelectedIDs: e8140000
-    m_LastClickedID: 5352
-    m_ExpandedIDs: 00000000a4090000ee090000980a0000a00a0000fa0a00004a0b0000540c0000920d0000ba0d0000ca0d0000e60d0000c60e0000680f0000e8120000d01300001614000074140000bc14000000150000341500006415000086150000964d0000984d000000ca9a3b
+    scrollPos: {x: 0, y: 131}
+    m_SelectedIDs: 12c40000
+    m_LastClickedID: 50194
+    m_ExpandedIDs: 00000000cc0a0000160b0000b60b0000be0b0000520c0000460d00006c0e0000940e0000a40e0000c00e0000820f0000241000007813000060140000a6140000021500004215000086150000ba150000ea1500000c160000a64e0000a84e0000aa4e0000505000006050000024c4000026c4000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -734,7 +734,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000a4090000ee090000980a0000a00a0000fa0a00004a0b0000540c0000920d0000ba0d0000ca0d0000e60d0000c60e0000680f0000e8120000d01300001614000074140000bc14000000150000341500006415000086150000964d0000984d000000ca9a3b
+    m_ExpandedIDs: 00000000cc0a0000160b0000b60b0000be0b0000520c0000460d00006c0e0000940e0000a40e0000c00e0000820f0000241000007813000060140000a6140000021500004215000086150000ba150000ea1500000c160000a64e0000a84e0000aa4e0000505000006050000024c4000026c4000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -761,7 +761,7 @@ MonoBehaviour:
   m_ListAreaState:
     m_SelectedInstanceIDs: 
     m_LastClickedInstanceID: 0
-    m_HadKeyboardFocusLastEvent: 1
+    m_HadKeyboardFocusLastEvent: 0
     m_ExpandedInstanceIDs: c623000000000000c6130000560c00005e120000
     m_RenameOverlay:
       m_UserAcceptedRename: 0

@@ -78,6 +78,7 @@
     <Compile Include="Assets\SwitchCam.cs" />
     <Compile Include="Assets\TimeControl.cs" />
     <None Include="Assets\ErbGameArt\Procedural fire\Shaders\FireSphere.shader" />
+    <None Include="Assets\20 Ground Material Sets MAN MADE\readme.txt" />
     <None Include="Assets\Western Wild West free Characters\Read Me.txt" />
     <None Include="Assets\ErbGameArt\Procedural fire\Demo scene\Readme.txt" />
     <Reference Include="Unity.TextMeshPro.Editor">
